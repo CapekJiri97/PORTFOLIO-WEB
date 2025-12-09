@@ -32,7 +32,7 @@
         header {
             background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
             color: var(--text-light);
-            height: 150px; /* Fixní výška 150px */
+            height: 150px; /* Fixní výška pro PC */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -59,7 +59,7 @@
 
         /* 2. UPROSTŘED: POPIS */
         .header-center {
-            flex: 1.5; /* Zabere trochu víc místa */
+            flex: 1.5;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -148,11 +148,11 @@
             padding: 3rem 5rem;
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Zarovnání doleva */
-            justify-content: flex-end;
+            align-items: flex-start;
+            justify-content: flex-end; /* Defaultně dole (pro PC) */
             height: 100%;
             color: white;
-            padding-bottom: 6rem; /* Prostor pro tečky */
+            padding-bottom: 6rem;
         }
 
         /* STYLING TEXTŮ V SLIDERU */
@@ -257,7 +257,7 @@
         }
         .dot.active { background: white; transform: scale(1.3); }
 
-        /* Mobilní verze */
+        /* --- MOBILNÍ VERZE --- */
         @media (max-width: 1024px) {
             header { 
                 height: auto; 
@@ -265,19 +265,18 @@
                 flex-direction: column; 
                 gap: 5px; 
                 text-align: center;
-                min-height: 100px;
+                min-height: auto; /* Zrušení min-height */
                 justify-content: center;
+                padding-bottom: 10px;
             }
             
-            /* 1. SKRYTÍ SKILLS A SOCIALS */
             .header-right, .social-links { display: none; }
 
-            /* 2. ZMĚNA POŘADÍ A STYLU */
             .header-left { order: 1; width: 100%; text-align: center; }
-            .header-center { order: 2; width: 100%; margin-top: 5px; }
+            .header-center { order: 2; width: 100%; margin-top: 2px; }
 
-            /* 3. ÚPRAVA TEXTŮ (ZMENŠENO PRO MOBIL) */
-            h1 { font-size: 1.5rem; margin-bottom: 0; } /* Původně 2.2rem, pak 1.8rem */
+            /* Zmenšené písmo pro mobil */
+            h1 { font-size: 1.5rem; margin-bottom: 0; }
             
             .subtitle { 
                 font-size: 0.8rem; 
@@ -287,11 +286,23 @@
                 opacity: 0.8;
             }
             
-            /* Úprava slideru pro mobil */
-            /* ZMENŠEN NADPIS PROJEKTU (cca o 30%) */
-            .project-title { font-size: 1.4rem; } 
-            
-            .slide-content { padding: 2rem; justify-content: flex-end; }
+            /* --- ÚPRAVA SLIDERU PRO MOBIL (TEXT NAHOŘE) --- */
+            .slide-content {
+                justify-content: flex-start; /* Zarovnání nahoru */
+                padding-top: 12px; /* Tvoje mezera 12px od headeru */
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+                align-items: center; /* Na mobilu středíme text */
+                text-align: center;
+            }
+
+            .project-title { 
+                font-size: 1.4rem; /* O 30% menší */
+                text-shadow: 0 2px 15px rgba(0,0,0,0.8); /* Silnější stín pro čitelnost nahoře */
+            }
+
+            .project-tags { justify-content: center; }
+
             .nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
             .prev { left: 10px; }
             .next { right: 10px; }
