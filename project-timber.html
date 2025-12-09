@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timber Market Project | Jiří Čapek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #38655D;       
+            --primary-dark: #294D46;
+            --accent: #4ade80;
+            
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            line-height: 1.8;
+        }
+
+        /* --- NAVIGACE --- */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-brand { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        
+        .btn-back {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+        .btn-back:hover { opacity: 1; transform: translateX(-5px); }
+
+        /* --- HERO SEKCE --- */
+        .project-hero {
+            background-color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .project-category {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item i { color: var(--primary); margin-right: 5px; }
+
+        /* --- OBRÁZEK --- */
+        .main-image-wrapper {
+            max-width: 1000px;
+            margin: -3rem auto 3rem auto;
+            padding: 0 1rem;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        /* --- OBSAH --- */
+        .content-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin: 3rem 0 1.2rem 0;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 3px;
+            background: var(--accent);
+            margin-top: 5px;
+            border-radius: 2px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.5rem 0;
+            color: var(--text-main);
+        }
+
+        p { margin-bottom: 1.2rem; color: #334155; font-size: 1.05rem; text-align: justify; }
+
+        /* TECH STACK BOX */
+        .tech-box {
+            background: #f1f5f9;
+            border-left: 5px solid var(--primary);
+            padding: 2rem;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+        }
+
+        .tech-title { font-weight: 700; margin-bottom: 1rem; color: var(--text-main); }
+        
+        .tech-list { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        .tech-tag {
+            background: white;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* DATA LISTS */
+        .data-list { list-style: none; margin-bottom: 1.5rem; }
+        .data-list li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .data-list li::before {
+            content: '•';
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        /* RESULTS CHECKLIST */
+        .results-list { list-style: none; margin-bottom: 1.5rem; }
+        .results-list li {
+            margin-bottom: 0.8rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+        .results-list li::before {
+            content: '\f00c'; /* FontAwesome check */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent);
+            position: absolute;
+            left: 0;
+            top: 4px;
+        }
+
+        /* PERSONAL REFLECTION BOX */
+        .reflection-box {
+            background: #ecfdf5; /* Světle zelenkavá */
+            border: 1px solid #d1fae5;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 3rem;
+            position: relative;
+        }
+        .reflection-box::before {
+            content: '\f10d'; /* Quote icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--bg);
+            padding: 0 10px;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* FOOTER */
+        .project-footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 5px 15px rgba(56, 101, 93, 0.3); }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .hero-meta { flex-direction: column; gap: 0.5rem; }
+            .content-section { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <div class="nav-brand">Jiří Čapek</div>
+    </nav>
+
+    <section class="project-hero">
+        <div class="container">
+            <span class="project-category">Econometrics & Data Science</span>
+            <h1>Econometric Modeling of Timber Market Dynamics</h1>
+            
+            <div class="hero-meta">
+                <div class="meta-item"><i class="far fa-calendar"></i> Timeframe: 2000–2024</div>
+                <div class="meta-item"><i class="fas fa-chart-line"></i> Method: TSLS</div>
+                <div class="meta-item"><i class="fas fa-database"></i> Source: Czech Statistical Office</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        
+        <p>
+            <strong>About this project:</strong><br>
+            This project focuses on analyzing the economic and production factors influencing timber harvesting in the Czech Republic (specifically Larch and Pine) between 2000 and 2024. Moving beyond simple linear regression, I developed a <strong>Simultaneous Equation Model</strong> to capture the interdependent nature of the timber market, providing a robust tool for analyzing market elasticity and predicting future trends.
+        </p>
+
+        <div class="tech-box">
+            <div class="tech-title">Tools & Methods</div>
+            <div class="tech-list">
+                <span class="tech-tag">Gretl</span>
+                <span class="tech-tag">MS Excel</span>
+                <span class="tech-tag">Two-Stage Least Squares (TSLS)</span>
+                <span class="tech-tag">VIF Tests</span>
+                <span class="tech-tag">Time-Series Analysis</span>
+            </div>
+        </div>
+
+        <h2>1. Objective & Hypothesis</h2>
+        <p>The goal was to determine which variables significantly affect the volume of Larch logging.</p>
+        <ul class="data-list">
+            <li><strong>Initial Hypothesis:</strong> Larch logging is influenced by the logging of other wood types (substitutes or complements), available forest area, and labor force capacity.</li>
+            <li><strong>Advanced Hypothesis:</strong> Larch and Pine markets are interconnected; a shock in one market affects the other simultaneously.</li>
+        </ul>
+
+        <h2>2. Data Collection & Preparation</h2>
+        <p>I constructed a dataset using annual time-series data (2000–2024) from the Czech Statistical Office.</p>
+        <ul class="data-list">
+            <li><strong>Endogenous Variables:</strong> Larch logging volume, Pine logging volume.</li>
+            <li><strong>Exogenous Variables:</strong> Beech logging, Coniferous forest area, Employment in forestry, Annual reforestation.</li>
+            <li><strong>Data Cleaning:</strong> Descriptive statistics and correlation matrices were used to detect outliers and potential multicollinearity (verified using VIF tests).</li>
+        </ul>
+
+        <h2>3. Methodology: From OLS to TSLS</h2>
+        
+        <h3>Step 1: Single-Equation Model (OLS)</h3>
+        <p>Initially, I used Ordinary Least Squares (OLS) to model Larch logging. While the model showed a high coefficient of determination (R<sup>2</sup> ~ 76%), it failed to capture the bidirectional relationship between different wood markets.</p>
+
+        <h3>Step 2: Simultaneous Equation Model (TSLS)</h3>
+        <p>To address endogeneity, I formulated a system of two structural equations where Larch and Pine logging volumes explain each other.</p>
+        <ul class="data-list">
+            <li><strong>Estimation Method:</strong> Two-Stage Least Squares (TSLS).</li>
+            <li><strong>Identification:</strong> The Order Condition was checked to ensure the system was solvable.</li>
+        </ul>
+
+        <h2>4. Model Diagnostics</h2>
+        <p>Rigorous econometric verification was performed to ensure the reliability of the estimates:</p>
+        <ul class="results-list">
+            <li><strong>Homoscedasticity:</strong> Verified using White’s test and Breusch-Pagan test.</li>
+            <li><strong>Autocorrelation:</strong> Checked using Durbin-Watson statistics and Breusch-Godfrey test to ensure independence of residuals.</li>
+            <li><strong>Normality:</strong> Residuals were tested for normal distribution to validate statistical inference.</li>
+        </ul>
+
+        <h2>5. Key Findings & Strategic Insights</h2>
+        <p>The simultaneous model revealed crucial market dynamics:</p>
+        <ul class="data-list">
+            <li><strong>Complementarity:</strong> A strong positive relationship was found between Larch and Pine logging. An increase in Pine harvesting activity drives Larch harvesting, suggesting shared logistical or market drivers.</li>
+            <li><strong>Elasticity Analysis:</strong> I calculated price elasticities to simulate scenarios. For instance, the model predicts that a 1% increase in forestry employment leads to a ~0.18% increase in Larch logging, indicating low labor sensitivity.</li>
+            <li><strong>Forecasting:</strong> The model was successfully used to simulate the impact of changes in forest area and labor force on future production volumes.</li>
+        </ul>
+
+        <div class="reflection-box">
+            <h3>Personal Reflection</h3>
+            <p style="margin-bottom: 0;">
+                This project enhanced my ability to look beyond simple correlation. By implementing a simultaneous equation model in Gretl, I learned how to handle complex economic systems where variables influence each other in real-time. It demonstrated that advanced statistical methods (TSLS) are essential for accurate modeling in interconnected markets.
+            </p>
+        </div>
+
+        <div class="project-footer">
+            <a href="#" class="btn-primary"><i class="fab fa-github"></i> View Source / Documentation</a>
+        </div>
+
+    </section>
+
+</body>
+</html>

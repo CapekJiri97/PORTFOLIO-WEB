@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bowling Analytics | Jiří Čapek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #38655D;       
+            --primary-dark: #294D46;
+            --accent: #4ade80;
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-light: #f1f5f9;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.7; }
+
+        /* NAVIGACE */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1rem 3rem;
+            display: flex; justify-content: space-between; align-items: center; color: white;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-back { color: white; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; opacity: 0.8; transition: 0.3s; }
+        .btn-back:hover { opacity: 1; transform: translateX(-5px); }
+
+        /* HERO */
+        .hero-split { display: flex; min-height: 80vh; background: white; }
+        .hero-left { flex: 1; padding: 4rem; display: flex; flex-direction: column; justify-content: center; }
+        .hero-right { flex: 1; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+            .hero-right::before { content: ''; position: absolute; width: 100%; height: 100%; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; opacity: 0.5; }
+             .hero-image {
+            width: 100%;        /* Roztáhne na celou šířku */
+            height: 100%;       /* Roztáhne na celou výšku */
+            object-fit: cover;  /* Zásadní: "Cover" pokryje celou plochu (jako pozadí) */
+            
+            z-index: 2;
+        }
+        /* Pozadí vpravo - abstraktní data nebo bowling */
+        .hero-right::before { content: ''; position: absolute; width: 100%; height: 100%; background-image: url('https://images.unsplash.com/photo-1533575770077-052fa2c609fc?q=80&w=1920&auto=format&fit=crop'); background-size: cover; opacity: 0.3; }
+        
+        .hero-badge { background: #e0f2fe; color: #0284c7; padding: 5px 12px; border-radius: 4px; font-weight: 600; font-size: 0.8rem; width: fit-content; margin-bottom: 1rem; }
+        h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1.5rem; color: var(--primary-dark); }
+        .lead { font-size: 1.1rem; color: #64748b; margin-bottom: 2rem; max-width: 500px; }
+        
+        .btn-live { background: var(--primary); color: white; padding: 15px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(56, 101, 93, 0.2); transition: all 0.3s; width: fit-content; }
+        .btn-live:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(56, 101, 93, 0.3); }
+
+        /* TIMELINE */
+        .timeline-section { max-width: 900px; margin: 4rem auto; padding: 0 1rem; position: relative; }
+        .timeline-section::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }
+        
+        .step-card { background: white; border-radius: 12px; padding: 2rem; margin-bottom: 3rem; margin-left: 50px; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .step-card::before { content: ''; position: absolute; left: -41px; top: 30px; width: 20px; height: 20px; background: var(--primary); border: 4px solid #f8fafc; border-radius: 50%; z-index: 2; }
+        .step-title { font-size: 1.4rem; color: var(--text-main); margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+        .step-title i { color: var(--primary); opacity: 0.8; }
+
+        .code-block { background: var(--code-bg); color: #d4d4d4; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9rem; overflow-x: auto; margin: 1.5rem 0; border-left: 4px solid var(--accent); }
+        .keyword { color: #569cd6; } .string { color: #ce9178; } .function { color: #dcdcaa; } .comment { color: #6a9955; font-style: italic; }
+
+        .project-image { width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 1rem 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        /* METRICS (KPIs) */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 2rem; }
+        .metric-card { background: #f0fdf4; padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid #dcfce7; display: flex; flex-direction: column; justify-content: center; }
+        .metric-value { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        .metric-label { font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
+
+        /* REFLECTION BOX */
+        .reflection-card { background: #ecfdf5; border: 1px solid #d1fae5; }
+        .reflection-card::before { background: #10b981; }
+
+        footer { text-align: center; padding: 3rem; border-top: 1px solid var(--border); color: #64748b; }
+
+        @media (max-width: 900px) { .hero-split { flex-direction: column; } .hero-right { height: 300px; } .hero-left { padding: 2rem; } h1 { font-size: 2.2rem; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <div class="nav-brand">Jiří Čapek</div>
+    </nav>
+
+    <header class="hero-split">
+        <div class="hero-left">
+            <span class="hero-badge">Power BI & Advanced DAX</span>
+            <h1>Bowling Performance Analytics</h1>
+            <p class="lead">
+                A "passion project" applying advanced data analytics to sports. Moving beyond simple averages to track <strong>consistency</strong>, <strong>mental endurance</strong>, and <strong>current form</strong> using custom KPIs.
+            </p>
+            <a href="#" class="btn-live">
+                <i class="fas fa-chart-bar"></i> View Dashboard
+            </a>
+        </div>
+     
+         <div class="hero-right">
+            <img src="bowlingpc.png" alt="Loan Probability Model Header" class="hero-image">
+        </div>
+    </header>
+
+    <section class="timeline-section">
+        
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-question-circle"></i> 1. The Challenge: Beyond the Average</h2>
+            <p>
+                Standard bowling statistics (average score) often mask the true nature of a player's performance. A player with a 150 average might be wildly inconsistent, while another is steady. 
+                I wanted to answer questions like:
+            </p>
+            <ul style="margin: 1rem 0 1rem 2rem; color: #475569;">
+                <li>Who performs better under pressure (later stages)?</li>
+                <li>Is a player's current form trending up or down?</li>
+                <li>Who is the most consistent player regardless of score?</li>
+            </ul>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-code"></i> 2. Advanced DAX Engineering</h2>
+            <p>
+                I engineered several custom measures using functions like <code>CALCULATE</code>, <code>FILTER</code>, <code>UNION</code>, and <code>SUMMARIZE</code>.
+            </p>
+            
+            <div style="margin-top: 20px;">
+                <strong>1. Player Consistency (Coefficient of Variation):</strong><br>
+                <span style="font-size: 0.9rem; color: #64748b;">Calculated the relative standard deviation to measure stability. Helps identify "Wildcards" vs. "Steady Eddies".</span>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <strong>2. Current Form (Weighted Moving Average):</strong><br>
+                <span style="font-size: 0.9rem; color: #64748b;">Assigns higher weights to recent games (50% last, 33% previous, 17% before) to track immediate trends.</span>
+            </div>
+
+            <div class="code-block">
+<span class="comment">/* DAX Formula: Weighted Moving Average 
+   Logic: Calculate average where recent games have higher impact.
+   (Code placeholder - will be inserted later)
+*/</span><br>
+<br>
+<span class="keyword">VAR</span> LastGame = ...<br>
+<span class="keyword">VAR</span> Weight1 = 0.5<br>
+<span class="keyword">RETURN</span><br>
+&nbsp;&nbsp;<span class="function">CALCULATE</span>( ... )
+            </div>
+
+            <div style="margin-top: 20px;">
+                <strong>3. Pinfall Efficiency:</strong><br>
+                <span style="font-size: 0.9rem; color: #64748b;">Using <code>UNION</code> and <code>SELECTCOLUMNS</code> to virtually unpivot frame-by-frame data and normalize strikes/spares.</span>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-chart-scatter"></i> 3. Visualization: The Magic Quadrant</h2>
+            <p>
+                Inspired by Gartner's business charts, I created a scatter plot correlating <strong>"Form"</strong> (Y-axis) vs. <strong>"Consistency"</strong> (X-axis).
+                This allows for instant player segmentation.
+            </p>
+            <img src="magic.png" alt="Magic Quadrant" class="project-image">
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-lightbulb"></i> 4. Key Insights</h2>
+            <p>
+                The dashboard revealed critical insights that simple averages missed:
+            </p>
+            
+            <div class="metrics-grid" style="grid-template-columns: 1fr 1fr;">
+                <div class="metric-card">
+                    <div class="metric-value" style="color: #d97706;">Risk Factor</div>
+                    <div class="metric-label">High Score ≠ Consistency</div>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-top: 10px;">The player with the highest absolute score was actually the least consistent.</p>
+                </div>
+                <div class="metric-card" style="background: #ecfdf5; border-color: var(--primary);">
+                    <div class="metric-value">+20%</div>
+                    <div class="metric-label">Late Game Surge</div>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-top: 10px;">Identified an "underrated" player who performs significantly better under pressure.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card reflection-card">
+            <h2 class="step-title"><i class="fas fa-user-edit"></i> Personal Reflection</h2>
+            <p>
+                This project was a deep dive into <strong>DAX logic</strong>. Writing formulas that handle text-based scores ("Strike"/"Spare") and converting them into calculable weighted metrics honed my ability to solve complex data engineering problems within Power BI.
+            </p>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Jiří Čapek. Power BI & Sports Analytics.</p>
+    </footer>
+
+</body>
+</html>

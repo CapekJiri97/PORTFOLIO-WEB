@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prusa Marketing Analysis | Jiří Čapek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* TVOJE PŮVODNÍ ZELENÁ PALETA */
+            --primary: #38655D;       
+            --primary-dark: #294D46;
+            --accent: #4ade80;
+            
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            line-height: 1.8;
+        }
+
+        /* --- NAVIGACE --- */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1rem 3rem;
+            display: flex; justify-content: space-between; align-items: center; color: white;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-back { color: white; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; opacity: 0.8; transition: 0.3s; }
+        .btn-back:hover { opacity: 1; transform: translateX(-5px); }
+
+        /* --- HERO SEKCE --- */
+        .project-hero {
+            background-color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-hero::before {
+            content: ''; position: absolute; top: -50px; right: -50px; width: 300px; height: 300px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%); opacity: 0.05;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .project-category {
+            color: var(--primary); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; display: inline-block;
+        }
+
+        h1 { font-size: 2.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 1.5rem; color: var(--text-main); }
+
+        .hero-meta {
+            display: flex; justify-content: center; gap: 2rem; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; flex-wrap: wrap;
+        }
+        .meta-item i { color: var(--primary); margin-right: 5px; }
+
+        /* --- HLAVNÍ OBRÁZEK --- */
+        .main-image-wrapper {
+            max-width: 1000px; margin: -3rem auto 3rem auto; padding: 0 1rem;
+        }
+        .main-image { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: block; border: 1px solid var(--border); }
+
+        /* --- OBSAH --- */
+        .content-section { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+
+        h2 { font-size: 1.6rem; color: var(--primary); margin: 3rem 0 1.5rem 0; position: relative; display: inline-block; font-weight: 600; }
+        h2::after { content: ''; display: block; width: 50px; height: 3px; background: var(--accent); margin-top: 5px; border-radius: 2px; }
+
+        p { margin-bottom: 1.5rem; color: #334155; font-size: 1.05rem; text-align: justify; }
+
+        /* PROCESS PIPELINE */
+        .pipeline-container {
+            display: flex; gap: 20px; margin: 2rem 0; flex-wrap: wrap;
+        }
+        .pipeline-step {
+            flex: 1; min-width: 220px;
+            background: white; padding: 2rem; border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+        }
+        .pipeline-step:not(:last-child)::after {
+            content: '\f061'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+            color: var(--border); z-index: 10; font-size: 1.2rem;
+        }
+
+        .pipeline-step:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .step-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .step-title { font-weight: 700; margin-bottom: 0.5rem; display: block; color: var(--text-main); }
+        .step-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; }
+
+        /* INSIGHTS CARDS */
+        .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin: 2rem 0; }
+        .insight-card {
+            background: #fff; 
+            padding: 1.5rem; border-radius: 12px; 
+            border-top: 5px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .insight-title { font-weight: 700; color: var(--primary); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+        .insight-text { font-size: 0.95rem; color: #555; margin: 0; line-height: 1.6; }
+
+        /* REFLECTION */
+        .reflection-box { background: #ecfdf5; border: 1px solid #d1fae5; padding: 2rem; border-radius: 12px; margin-top: 3rem; position: relative; }
+        .reflection-box::before { content: '\f10d'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: -15px; left: 20px; background: var(--bg); padding: 0 10px; color: var(--primary); font-size: 1.5rem; }
+        .reflection-title { font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; display: block; }
+
+        .project-footer { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+        .btn-primary { display: inline-block; background: var(--primary); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 101, 93, 0.3); }
+
+        @media (max-width: 768px) { 
+            h1 { font-size: 2rem; } 
+            .pipeline-container { flex-direction: column; } 
+            .pipeline-step:not(:last-child)::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <div class="nav-brand">Jiří Čapek</div>
+    </nav>
+
+    <section class="project-hero">
+        <div class="container">
+            <span class="project-category">Market Research & BI</span>
+            <h1>Marketing Mix Analysis: Prusa Research</h1>
+            
+            <div class="hero-meta">
+                <div class="meta-item"><i class="fas fa-chart-bar"></i> Tool: Power BI</div>
+                <div class="meta-item"><i class="fas fa-poll-h"></i> Source: Survey (B2C)</div>
+                <div class="meta-item"><i class="fas fa-bullseye"></i> Focus: 4P & Loyalty</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-image-wrapper">
+        <img src="https://via.placeholder.com/1000x500/f5f5f5/38655D?text=Prusa+Power+BI+Dashboard+Screenshot" alt="Prusa Marketing Dashboard" class="main-image">
+    </div>
+
+    <section class="content-section">
+        
+        <p>
+            <strong>About this project:</strong><br>
+            The main goal of this survey was to understand the current market position of <strong>Prusa Research</strong>. I aimed to define the typical customer persona, identify key decision-making parameters (Speed, Quality, Price), and analyze how the <strong>4P marketing mix</strong> is perceived by Prusa owners compared to users of competing brands.
+        </p>
+
+        <h2>1. The Data Pipeline</h2>
+        <p>I managed the whole data pipeline from collection to visualization. This was an end-to-end analytics project:</p>
+
+        <div class="pipeline-container">
+            <div class="pipeline-step">
+                <div class="step-icon"><i class="fas fa-users"></i></div>
+                <span class="step-title">Data Collection</span>
+                <p class="step-desc">Designed a survey to analyze market trends, brand awareness sources (Social media, Events), and customer loyalty.</p>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-icon"><i class="fas fa-file-excel"></i></div>
+                <span class="step-title">Cleaning (Excel)</span>
+                <p class="step-desc">Processed raw data, categorized open-ended answers, and segmented users into "Prusa Owners" vs. "Competitors".</p>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-icon"><i class="fas fa-chart-pie"></i></div>
+                <span class="step-title">Viz (Power BI)</span>
+                <p class="step-desc">Built an interactive dashboard to visualize the 4P perception and loyalty metrics across different user segments.</p>
+            </div>
+        </div>
+
+        <h2>2. Key Market Insights</h2>
+        <p>The analysis of the survey data revealed clear trends regarding the customer base and brand strength:</p>
+
+        <div class="insights-grid">
+            
+            <div class="insight-card">
+                <div class="insight-title"><i class="fas fa-user-tag"></i> Customer Persona</div>
+                <p class="insight-text">
+                    The typical customer is a <strong>Technical Enthusiast</strong> (Male, 26-45, HS/Uni education) who purchases 3D printing goods ~3x/month. This confirms Prusa's strong B2C position.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title"><i class="fas fa-heart"></i> High Loyalty</div>
+                <p class="insight-text">
+                    Prusa boasts exceptional loyalty (>50% retention) compared to competitors (>66% switchers). The main driver is <strong>Long-term Quality</strong> (42%), followed by Community and Ecosystem.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <div class="insight-title"><i class="fas fa-balance-scale"></i> Perception Gap</div>
+                <p class="insight-text">
+                    Prusa owners rate the brand's <strong>Quality and Price</strong> significantly higher than non-owners. Interestingly, <em>Bambu Lab</em> owners are the most critical regarding Prusa's price/performance ratio.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="reflection-box">
+            <span class="reflection-title">Personal Reflection</span>
+            <p style="margin-bottom: 0;">
+                This project taught me that data interpretation is as important as visualization. The survey revealed that while competitors may win on specs, Prusa's retention is driven by <strong>long-term trust</strong>. Translating these qualitative insights into a Power BI story was the key challenge and learning outcome.
+            </p>
+        </div>
+
+        <div class="project-footer">
+            <a href="Prusa Research Analysis - eng.pdf" class="btn-primary" target="_blank"><i class="fas fa-file-pdf"></i> View Analysis PDF</a>
+        </div>
+
+    </section>
+
+</body>
+</html>

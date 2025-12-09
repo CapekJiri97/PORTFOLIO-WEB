@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildlife Simulation | Jiří Čapek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* ZELENÁ PALETA (Zachována pro konzistenci a téma) */
+            --primary: #38655D;       
+            --primary-dark: #294D46;
+            --accent: #4ade80;
+            
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            line-height: 1.8;
+        }
+
+        /* --- NAVIGACE --- */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1rem 3rem;
+            display: flex; justify-content: space-between; align-items: center; color: white;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-back { color: white; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; opacity: 0.8; transition: 0.3s; }
+        .btn-back:hover { opacity: 1; transform: translateX(-5px); }
+
+        /* --- HERO SEKCE --- */
+        .project-hero {
+            background-color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .project-category {
+            color: var(--primary); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; display: inline-block;
+        }
+
+        h1 { font-size: 2.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 1.5rem; color: var(--text-main); }
+
+        .hero-meta {
+            display: flex; justify-content: center; gap: 2rem; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; flex-wrap: wrap;
+        }
+        .meta-item i { color: var(--primary); margin-right: 5px; }
+
+        /* --- OBRÁZEK --- */
+        .main-image-wrapper {
+            max-width: 1000px; margin: -3rem auto 3rem auto; padding: 0 1rem;
+        }
+        /* Placeholder pro Dashboard screenshot */
+        .main-image { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); display: block; }
+
+        /* --- OBSAH --- */
+        .content-section { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+
+        h2 { font-size: 1.6rem; color: var(--primary); margin: 3rem 0 1.2rem 0; position: relative; display: inline-block; }
+        h2::after { content: ''; display: block; width: 40px; height: 3px; background: var(--accent); margin-top: 5px; border-radius: 2px; }
+
+        h3 { font-size: 1.2rem; margin: 1.5rem 0 0.5rem 0; color: var(--text-main); font-weight: 600; }
+        p { margin-bottom: 1.2rem; color: #334155; font-size: 1.05rem; text-align: justify; }
+
+        /* TECH STACK BOX */
+        .tech-box { background: #f1f5f9; border-left: 5px solid var(--primary); padding: 2rem; border-radius: 0 8px 8px 0; margin: 2rem 0; }
+        .tech-title { font-weight: 700; margin-bottom: 1rem; color: var(--text-main); }
+        .tech-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tech-tag { background: white; padding: 6px 14px; border-radius: 50px; font-size: 0.9rem; font-weight: 500; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+
+        /* LISTY */
+        .data-list { list-style: none; margin-bottom: 1.5rem; }
+        .data-list li { margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative; }
+        .data-list li::before { content: '•'; color: var(--primary); font-weight: bold; font-size: 1.5rem; position: absolute; left: 0; top: -5px; }
+
+        /* --- SCENARIO GRID (NOVÉ PRO TENTO PROJEKT) --- */
+        .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 2rem 0; }
+        .scenario-card { background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: transform 0.3s; }
+        .scenario-card:hover { transform: translateY(-5px); }
+        .scenario-title { font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; display: block; font-size: 1.1rem; }
+        .scenario-result { font-weight: 600; color: #d97706; margin-top: 10px; display: block; }
+        .scenario-result.positive { color: #10b981; }
+
+        /* REFLECTION */
+        .reflection-box { background: #ecfdf5; border: 1px solid #d1fae5; padding: 2rem; border-radius: 12px; margin-top: 3rem; position: relative; }
+        .reflection-box::before { content: '\f10d'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: -15px; left: 20px; background: var(--bg); padding: 0 10px; color: var(--primary); font-size: 1.5rem; }
+
+        .project-footer { text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+        .btn-primary { display: inline-block; background: var(--primary); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 5px 15px rgba(56, 101, 93, 0.3); }
+
+        /* Obrázky v textu */
+        .content-image { width: 100%; border-radius: 8px; margin: 2rem 0; border: 1px solid #e2e8f0; }
+
+        @media (max-width: 768px) { h1 { font-size: 2rem; } .scenario-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <div class="nav-brand">Jiří Čapek</div>
+    </nav>
+
+    <section class="project-hero">
+        <div class="container">
+            <span class="project-category">System Dynamics & Strategic Planning</span>
+            <h1>Wildlife Management & Economic Simulation</h1>
+            
+            <div class="hero-meta">
+                <div class="meta-item"><i class="fas fa-project-diagram"></i> Tool: Vensim</div>
+                <div class="meta-item"><i class="fas fa-chart-line"></i> Archetype: Limits to Growth</div>
+                <div class="meta-item"><i class="fas fa-tree"></i> Context: Game Management</div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="content-section">
+        
+        <p>
+            <strong>About this project:</strong><br>
+            While traditional data analysis looks at static historical data, this project utilizes <strong>System Dynamics</strong> to model complex, non-linear behavior over time. I developed a comprehensive simulation model for a Game Management Association to analyze the <strong>"Limits to Growth"</strong> archetype in a real-world biological and economic context.
+        </p>
+
+        <div class="tech-box">
+            <div class="tech-title">Tools & Methods</div>
+            <div class="tech-list">
+                <span class="tech-tag">Vensim</span>
+                <span class="tech-tag">System Dynamics</span>
+                <span class="tech-tag">Simulation Modeling</span>
+                <span class="tech-tag">Causal Loop Diagrams (CLD)</span>
+                <span class="tech-tag">Stock & Flow</span>
+            </div>
+        </div>
+
+        <h2>1. The Problem: Limits to Growth</h2>
+        <p>Managing a hunting ground is a balancing act between exponential biological growth and finite resources. The project addresses two types of limits:</p>
+        <ul class="data-list">
+            <li><strong>Biological Limit:</strong> The maximum population the forest ecosystem can sustain (Carrying Capacity).</li>
+            <li><strong>Economic Limit:</strong> The financial "ceiling" of the association. As the population grows, crop damages increase non-linearly. If these costs exceed the budget, the system collapses (bankruptcy) before the biological limit is even reached.</li>
+        </ul>
+
+        <h2>2. Modeling Methodology (Vensim)</h2>
+        <p>I used <strong>Vensim</strong> to construct the Stock & Flow structure, explicitly modeling the feedback loops that drive the Limits to Growth behavior:</p>
+        
+        <img src="sfd.png" alt="Stock and Flow Structure" class="content-image">
+
+        <ul class="data-list">
+            <li><strong>Reinforcing Loop (R):</strong> Natural reproduction driving exponential population growth.</li>
+            <li><strong>Balancing Loops (B):</strong> Mortality, culling quotas, and financial pressure acting as constraints.</li>
+            <li><strong>Delays:</strong> I incorporated information delays (time between census and action), which are the primary cause of "overshoot and collapse" scenarios.</li>
+        </ul>
+
+        <h2>3. Interactive Dashboard</h2>
+        <p>A key part of the project was creating a user-friendly interface (UI) that allows forest managers to test strategies against these limits. The dashboard features:</p>
+        <ul class="data-list">
+            <li><strong>Control Panel:</strong> Sliders to adjust variables like Initial Budget, Feed Costs, or Desired Population Size.</li>
+            <li><strong>Real-time Visualization:</strong> Graphs showing the immediate impact of decisions on Cash Flow and Population Stability over a 100-year timeline.</li>
+        </ul>
+
+        <h2>4. Scenarios Analyzed & Findings</h2>
+        <p>I tested how different management styles handle the approach to the system's limits. Without proactive management, the system naturally tends towards oscillation or collapse due to information delays.</p>
+
+        <div class="scenario-grid">
+            
+            <div class="scenario-card">
+                <span class="scenario-title">Scenario A: Reactive</span>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">
+                    Maximizing hunting revenue without anticipating costs. The population grows too fast, damages skyrocket, and the association reacts too late.
+                </p>
+                <span class="scenario-result">Result: Overshoot & Collapse (Bankruptcy)</span>
+            </div>
+
+            <div class="scenario-card">
+                <span class="scenario-title">Scenario B: Adaptive</span>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">
+                    Using the model to find a sustainable equilibrium. Balancing measures are applied <em>before</em> economic limits are breached.
+                </p>
+                <span class="scenario-result positive">Result: Long-term Equilibrium</span>
+            </div>
+
+        </div>
+
+        <div class="reflection-box">
+            <h3>Personal Reflection</h3>
+            <p style="margin-bottom: 0;">
+                This project required a shift from linear thinking to <strong>Systems Thinking</strong>. By modeling the <em>Limits to Growth</em> archetype, I learned how to identify hidden constraints in a system and how time delays can turn a stable growth curve into a destructive cycle. It highlighted that sustainable management isn't about maximizing growth, but about managing limits.
+            </p>
+        </div>
+
+        <div class="project-footer">
+            <a href="sfdprojekt.pdf"  class="btn-primary" target="_blank"><i class="fas fa-file-alt"></i> View Project Report</a>
+        </div>
+
+    </section>
+
+</body>
+</html>

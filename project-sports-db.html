@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports DB Analytics | Jiří Čapek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Stejné proměnné jako v předchozím Tech templatu */
+            --primary: #38655D;       
+            --primary-dark: #294D46;
+            --accent: #4ade80;
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-light: #f1f5f9;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.7; }
+
+        /* NAVIGACE */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1rem 3rem;
+            display: flex; justify-content: space-between; align-items: center; color: white;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-back { color: white; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; opacity: 0.8; transition: 0.3s; }
+        .btn-back:hover { opacity: 1; transform: translateX(-5px); }
+
+        /* HERO */
+        .hero-split { display: flex; min-height: 80vh; background: white; }
+        .hero-left { flex: 1; padding: 4rem; display: flex; flex-direction: column; justify-content: center; }
+        .hero-right { flex: 1; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .hero-right::before { content: ''; position: absolute; width: 100%; height: 100%; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; opacity: 0.5; }
+             .hero-image {
+            width: 100%;        /* Roztáhne na celou šířku */
+            height: 100%;       /* Roztáhne na celou výšku */
+            object-fit: cover;  /* Zásadní: "Cover" pokryje celou plochu (jako pozadí) */
+            
+            z-index: 2;
+        }
+        .hero-badge { background: #e0f2fe; color: #0284c7; padding: 5px 12px; border-radius: 4px; font-weight: 600; font-size: 0.8rem; width: fit-content; margin-bottom: 1rem; }
+        h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1.5rem; color: var(--primary-dark); }
+        .lead { font-size: 1.1rem; color: #64748b; margin-bottom: 2rem; max-width: 500px; }
+        
+        .btn-live { background: var(--primary); color: white; padding: 15px 35px; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 10px 20px rgba(56, 101, 93, 0.2); transition: all 0.3s; width: fit-content; }
+        .btn-live:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(56, 101, 93, 0.3); }
+
+        /* TIMELINE */
+        .timeline-section { max-width: 900px; margin: 4rem auto; padding: 0 1rem; position: relative; }
+        .timeline-section::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }
+        
+        .step-card { background: white; border-radius: 12px; padding: 2rem; margin-bottom: 3rem; margin-left: 50px; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .step-card::before { content: ''; position: absolute; left: -41px; top: 30px; width: 20px; height: 20px; background: var(--primary); border: 4px solid #f8fafc; border-radius: 50%; z-index: 2; }
+        .step-title { font-size: 1.4rem; color: var(--text-main); margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
+        .step-title i { color: var(--primary); opacity: 0.8; }
+
+        .code-block { background: var(--code-bg); color: #d4d4d4; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9rem; overflow-x: auto; margin: 1.5rem 0; border-left: 4px solid var(--accent); }
+        .keyword { color: #569cd6; } .string { color: #ce9178; } .function { color: #dcdcaa; } .comment { color: #6a9955; font-style: italic; }
+
+        .project-image { width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 1rem 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        /* REFLECTION BOX */
+        .reflection-card { background: #ecfdf5; border: 1px solid #d1fae5; }
+        .reflection-card::before { background: #10b981; }
+
+        footer { text-align: center; padding: 3rem; border-top: 1px solid var(--border); color: #64748b; }
+
+        @media (max-width: 900px) { .hero-split { flex-direction: column; } .hero-right { height: 300px; } .hero-left { padding: 2rem; } h1 { font-size: 2.2rem; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <div class="nav-brand">Jiří Čapek</div>
+    </nav>
+
+    <header class="hero-split">
+        <div class="hero-left">
+            <span class="hero-badge">SQL & Database Engineering</span>
+            <h1>Sports Season Database System</h1>
+            <p class="lead">
+                End-to-end design and implementation of a relational database for managing a professional football league. 
+                Focus on normalization, data integrity, and complex analytics.
+            </p>
+            <a href="#" class="btn-live">
+                <i class="fab fa-github"></i> View SQL Scripts
+            </a>
+        </div>
+      
+         <div class="hero-right">
+            <img src="erd.png" alt="Loan Probability Model Header" class="hero-image">
+        </div>
+
+
+
+    </header>
+
+    <section class="timeline-section">
+        
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-sitemap"></i> 1. Conceptual & Logical Design</h2>
+            <p>
+                The database manages a football season including players, teams, matches, goals, and cards. 
+                A key challenge was handling circular relationships (loops) to maintain data integrity.
+            </p>
+            <ul style="margin: 1rem 0 1rem 2rem; color: #475569;">
+                <li><strong>Loop Handling:</strong> The cycle <em>Match -> Team -> Player -> Participation</em> was resolved using optional relationships to prevent deletion anomalies.</li>
+                <li><strong>Entities:</strong> Designed 14 tables including <em>Participation</em> (linking players to matches) and <em>Deals</em> (sponsors & teams).</li>
+            </ul>
+            <img src="erd2.png" alt="ER Diagram" class="project-image">
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-server"></i> 2. DDL Implementation</h2>
+            <p>
+                The physical database was implemented in <strong>PostgreSQL</strong>. I used constraints to enforce rules, such as ensuring unique IDs and proper foreign key links.
+            </p>
+            
+            <div class="code-block">
+<span class="comment">-- Table: Match (Example of Physical Schema)</span><br>
+<span class="keyword">CREATE TABLE</span> match (<br>
+&nbsp;&nbsp;mid <span class="keyword">SERIAL NOT NULL PRIMARY KEY</span>,<br>
+&nbsp;&nbsp;fid <span class="keyword">INTEGER NOT NULL REFERENCES</span> field(fid),<br>
+&nbsp;&nbsp;rid <span class="keyword">INTEGER NOT NULL REFERENCES</span> referee(rid),<br>
+&nbsp;&nbsp;tid <span class="keyword">INTEGER NOT NULL REFERENCES</span> team(tid),<br>
+&nbsp;&nbsp;team_tid <span class="keyword">INTEGER NOT NULL REFERENCES</span> team(tid),<br>
+&nbsp;&nbsp;date <span class="keyword">DATE NOT NULL</span>,<br>
+&nbsp;&nbsp;round <span class="keyword">INTEGER NOT NULL</span>,<br>
+&nbsp;&nbsp;motw <span class="keyword">BOOLEAN</span> <span class="comment">-- Match of the Week flag</span><br>
+);
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-code"></i> 3. Advanced Querying</h2>
+            <p>
+                The core value lies in data extraction. I utilized complex SQL features like <strong>Set Operations (INTERSECT)</strong> and <strong>Having clauses</strong> to answer business questions.
+            </p>
+            
+            <div class="code-block">
+<span class="comment">-- QUERY H3: Find teams with Sponsors AND Experienced Players (5+ matches)</span><br>
+<span class="comment">-- Demonstrates usage of INTERSECT and Subqueries</span><br>
+<br>
+<span class="keyword">SELECT</span> t.tid, t.name <span class="keyword">AS</span> team_name <span class="keyword">FROM</span> team t <br>
+<span class="keyword">WHERE</span> t.tid <span class="keyword">IN</span> (<span class="keyword">SELECT DISTINCT</span> tid <span class="keyword">FROM</span> deal)<br>
+<br>
+<span class="keyword">INTERSECT</span><br>
+<br>
+<span class="keyword">SELECT</span> t.tid, t.name <span class="keyword">AS</span> team_name <span class="keyword">FROM</span> team t<br>
+<span class="keyword">JOIN</span> (<br>
+&nbsp;&nbsp;<span class="keyword">SELECT</span> tid <span class="keyword">FROM</span> participation p <br>
+&nbsp;&nbsp;<span class="keyword">JOIN</span> player pl <span class="keyword">USING</span>(pid) <br>
+&nbsp;&nbsp;<span class="keyword">GROUP BY</span> tid <span class="keyword">HAVING COUNT</span>(<span class="keyword">DISTINCT</span> p.mid) >= 5<br>
+) <span class="keyword">AS</span> experienced_teams <span class="keyword">ON</span> t.tid = experienced_teams.tid;
+            </div>
+
+            <div class="code-block" style="margin-top: 20px;">
+<span class="comment">-- QUERY K: Complex Aggregation across 3 Joined Tables</span><br>
+<span class="comment">-- Selects players with at least 3 matches played</span><br>
+<span class="keyword">SELECT</span> p.name, p.surname, t.name, <span class="function">COUNT</span>(<span class="keyword">DISTINCT</span> part.mid) <span class="keyword">AS</span> match_count <br>
+<span class="keyword">FROM</span> player p <br>
+<span class="keyword">JOIN</span> participation part <span class="keyword">USING</span>(pid) <br>
+<span class="keyword">JOIN</span> team t <span class="keyword">USING</span>(tid) <br>
+<span class="keyword">GROUP BY</span> p.pid, t.tid, p.name, p.surname, t.name <br>
+<span class="keyword">HAVING COUNT</span>(<span class="keyword">DISTINCT</span> part.mid) >= 3 <br>
+<span class="keyword">ORDER BY</span> match_count <span class="keyword">DESC</span>;
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-square-root-variable"></i> 4. Relational Algebra & Verification</h2>
+            <p>
+                Before implementation, queries were verified using Relational Algebra logic (e.g., verifying "Players without cards" using Set Difference).
+                <br><code>player \ {player * card}</code>
+            </p>
+        </div>
+
+        <div class="step-card reflection-card">
+            <h2 class="step-title"><i class="fas fa-lightbulb"></i> Personal Reflection</h2>
+            <p>
+                Working on this custom database enhanced my understanding of data integrity. I learned that handling loops in ER diagrams is crucial for avoiding deletion anomalies. 
+                Writing complex queries (like the INTERSECT example above) bridged the gap between theoretical Relational Algebra and practical SQL application.
+            </p>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Jiří Čapek. Database Engineering Project.</p>
+    </footer>
+
+</body>
+</html>
