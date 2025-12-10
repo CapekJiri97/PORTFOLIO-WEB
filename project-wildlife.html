@@ -105,7 +105,96 @@
 
         /* Obrázky v textu */
         .content-image { width: 100%; border-radius: 8px; margin: 2rem 0; border: 1px solid #e2e8f0; }
+   /* --- MORE PROJECTS SECTION --- */
+        .more-projects {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 4rem;
+        }
 
+        .more-projects-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .projects-grid {
+            display: grid;
+            /* 3 sloupce na PC */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px;
+        }
+
+        .project-tile {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Aby obrázek nepřetekl rohy */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            height: 100%;
+        }
+
+        .project-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        /* Styl pro obrázek v dlaždici */
+        .tile-image {
+            width: 100%;
+            height: 140px; /* Fixní výška pro sjednocení */
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tile-content {
+            padding: 1.2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .tile-content h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .tile-tag {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+
+        /* Mobilní verze: 1 sloupec */
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .tile-image {
+                height: 160px; /* Na mobilu trochu vyšší obrázek */
+            }
+        }
         @media (max-width: 768px) { h1 { font-size: 2rem; } .scenario-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -124,7 +213,7 @@
             <div class="hero-meta">
                 <div class="meta-item"><i class="fas fa-project-diagram"></i> Tool: Vensim</div>
                 <div class="meta-item"><i class="fas fa-chart-line"></i> Archetype: Limits to Growth</div>
-                <div class="meta-item"><i class="fas fa-tree"></i> Context: Game Management</div>
+                <div class="meta-item"><i class="fas fa-tree"></i> Context: Wildlife management - hunting club</div>
             </div>
         </div>
     </section>
@@ -135,7 +224,7 @@
         
         <p>
             <strong>About this project:</strong><br>
-            While traditional data analysis looks at static historical data, this project utilizes <strong>System Dynamics</strong> to model complex, non-linear behavior over time. I developed a comprehensive simulation model for a Game Management Association to analyze the <strong>"Limits to Growth"</strong> archetype in a real-world biological and economic context.
+            This project utilizes <strong>System Dynamics</strong> to model the complex management of a hunting association. It simulates the delicate balance between wildlife population control and the economic impact of crop damages. The model specifically investigates how <strong>information delays</strong>  and <strong>financial pressures</strong> (repaying damages to farmers) can lead to system instability.
         </p>
 
         <div class="tech-box">
@@ -149,50 +238,51 @@
             </div>
         </div>
 
-        <h2>1. The Problem: Limits to Growth</h2>
-        <p>Managing a hunting ground is a balancing act between exponential biological growth and finite resources. The project addresses two types of limits:</p>
+        <h2>1. The Problem: Managing Uncertainty</h2>
+        <p>The core challenge is planning the hunting quota to prevent overpopulation while managing finite financial resources. The model addresses critical real-world dynamics:</p>
         <ul class="data-list">
-            <li><strong>Biological Limit:</strong> The maximum population the forest ecosystem can sustain (Carrying Capacity).</li>
-            <li><strong>Economic Limit:</strong> The financial "ceiling" of the association. As the population grows, crop damages increase non-linearly. If these costs exceed the budget, the system collapses (bankruptcy) before the biological limit is even reached.</li>
+            <li><strong>Crop Damages:</strong> Simulates the financial burden of repaying farmers for damages caused by game. It estimates the varying extent to which farmers actually claim these damages.</li>
+            <li><strong>Information Delays:</strong> Hunters often plan quotas based on outdated or inaccurate census data. The model demonstrates how this delay causes the system to overshoot its limits.</li>
         </ul>
 
         <h2>2. Modeling Methodology (Vensim)</h2>
-        <p>I used <strong>Vensim</strong> to construct the Stock & Flow structure, explicitly modeling the feedback loops that drive the Limits to Growth behavior:</p>
+        <p>I constructed a Stock & Flow structure in <strong>Vensim</strong> to explicitly model the feedback loops driving the system's behavior:</p>
         
         <img src="sfd.png" alt="Stock and Flow Structure" class="content-image">
 
         <ul class="data-list">
-            <li><strong>Reinforcing Loop (R):</strong> Natural reproduction driving exponential population growth.</li>
-            <li><strong>Balancing Loops (B):</strong> Mortality, culling quotas, and financial pressure acting as constraints.</li>
-            <li><strong>Delays:</strong> I incorporated information delays (time between census and action), which are the primary cause of "overshoot and collapse" scenarios.</li>
+            <li><strong>Biological Growth (R):</strong> Modeling natural reproduction and population dynamics.</li>
+            <li><strong>Financial Constraints (B):</strong> Balancing investments in prevention against the cost of damages.</li>
+            <li><strong>Farmer Behavior:</strong> A behavioral component estimating the probability of farmers enforcing damage claims.</li>
         </ul>
 
         <h2>3. Interactive Dashboard</h2>
-        <p>A key part of the project was creating a user-friendly interface (UI) that allows forest managers to test strategies against these limits. The dashboard features:</p>
+        <p>A key deliverable was a user-friendly interface designed for both game managers and laypeople. It allows users to experiment with constants and observe long-term consequences:</p>
         <ul class="data-list">
-            <li><strong>Control Panel:</strong> Sliders to adjust variables like Initial Budget, Feed Costs, or Desired Population Size.</li>
-            <li><strong>Real-time Visualization:</strong> Graphs showing the immediate impact of decisions on Cash Flow and Population Stability over a 100-year timeline.</li>
+            <li><strong>Control Panel:</strong> Users can adjust variables like <em>Initial Budget</em>, <em>Feed Costs</em>, or <em>Desired Population Size</em>.</li>
+            <li><strong>Real-time Simulation:</strong> Immediate visualization of how decisions impact <em>Cash Flow</em> and <em>Population Stability</em> over a 100-year timeline.</li>
         </ul>
 
         <h2>4. Scenarios Analyzed & Findings</h2>
-        <p>I tested how different management styles handle the approach to the system's limits. Without proactive management, the system naturally tends towards oscillation or collapse due to information delays.</p>
-
-        <div class="scenario-grid">
+        <p>The simulation revealed that without accounting for information delays, the system naturally tends towards oscillation or financial collapse.</p>
+ <div class="scenario-grid">
             
             <div class="scenario-card">
-                <span class="scenario-title">Scenario A: Reactive</span>
+                <span class="scenario-title">Scenario A: Target Population Impact</span>
+                
                 <p style="font-size: 0.9rem; margin-bottom: 0;">
-                    Maximizing hunting revenue without anticipating costs. The population grows too fast, damages skyrocket, and the association reacts too late.
+                    Comparing trends when planning for different population targets. Targeting a population size <em>above</em> the forest's carrying capacity proves unsustainable, causing significantly larger fluctuations in the financial function over time compared to a conservative target.
                 </p>
-                <span class="scenario-result">Result: Overshoot & Collapse (Bankruptcy)</span>
+    
             </div>
 
             <div class="scenario-card">
-                <span class="scenario-title">Scenario B: Adaptive</span>
+                <span class="scenario-title">Scenario B: Measurement Accuracy</span>
+
                 <p style="font-size: 0.9rem; margin-bottom: 0;">
-                    Using the model to find a sustainable equilibrium. Balancing measures are applied <em>before</em> economic limits are breached.
+                    Analyzing how census accuracy affects stability. Inaccurate population counting leads to severe oscillations in both cash flow and wildlife stock. The population frequently overshoots the maximum capacity or crashes, unlike scenarios with precise measurement.
                 </p>
-                <span class="scenario-result positive">Result: Long-term Equilibrium</span>
+         
             </div>
 
         </div>
@@ -209,6 +299,62 @@
         </div>
 
     </section>
+  <section class="more-projects">
+        <h3 class="more-projects-title">Explore Other Projects</h3>
+        
+        <div class="projects-grid">
+            
+            <a href="project-forest.html" class="project-tile">
+                <img src="bpheader.png" alt="Forest Logistics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Forest Logistics Optimization</h4>
+                    <span class="tile-tag">Operations Research</span>
+                </div>
+            </a>
 
+            <a href="project-timber.html" class="project-tile">
+                <img src="econometricsheader.png" alt="Timber Market" class="tile-image">
+                <div class="tile-content">
+                    <h4>Timber Market Dynamics</h4>
+                    <span class="tile-tag">Econometrics</span>
+                </div>
+            </a>
+
+            <a href="project-loan.html" class="project-tile">
+                <img src="pdheader.png" alt="Loan Predictor" class="tile-image">
+                <div class="tile-content">
+                    <h4>Loan Eligibility Model</h4>
+                    <span class="tile-tag">Machine Learning</span>
+                </div>
+            </a>
+
+            <a href="project-sports-db.html" class="project-tile">
+                <img src="dbheader.png" alt="Sports Database" class="tile-image">
+                <div class="tile-content">
+                    <h4>Sports DB System</h4>
+                    <span class="tile-tag">SQL & Database</span>
+                </div>
+            </a>
+
+      
+
+            <a href="project-prusa.html" class="project-tile">
+                <img src="prusaheader.png" alt="Prusa Analytics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Prusa Marketing Analysis</h4>
+                    <span class="tile-tag">Power BI & Marketing</span>
+                </div>
+            </a>
+
+            <a href="project-bowling.html" class="project-tile">
+                <img src="bowlingheader.png" alt="Bowling Analytics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Bowling Analytics</h4>
+                    <span class="tile-tag">Advanced DAX</span>
+                </div>
+            </a>
+
+        </div>
+    </section>
 </body>
 </html>

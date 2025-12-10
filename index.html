@@ -9,30 +9,42 @@
     
     <style>
         :root {
-            /* 1. UPRAVENÝ GRADIENT - Tmavší zelená */
             --primary-start: #38655D;
             --primary-end: #294D46;      
-            
             --text-light: #ffffff;
             --text-dark: #1e293b;
             --overlay-gradient: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.1) 100%);
+            --bg-dark: #111;
+            --card-bg: #1a1a1a;
+            --border-dark: #333;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body { 
-            background-color: #111; 
+            background-color: var(--bg-dark); 
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* --- 1. LANDING WRAPPER (Zajistí 100% výšku úvodní obrazovky) --- */
+        .landing-wrapper {
+            /* 100vh pro starší, 100dvh pro moderní mobily (řeší adresní řádek) */
             height: 100vh;
+            height: 100dvh; 
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            width: 100%;
+            position: relative;
         }
 
         /* --- HEADER SEKCE --- */
         header {
             background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
             color: var(--text-light);
-            height: 150px; /* Fixní výška pro PC */
+            /* Header si vezme svou přirozenou výšku (nebo 150px na PC) */
+            flex-shrink: 0; 
+            height: 150px; 
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -42,362 +54,183 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        /* 1. VLEVO: JMÉNO */
-        .header-left {
-            flex: 1;
-            text-align: left;
-        }
+        .header-left { flex: 1; text-align: left; }
+        h1 { font-size: 2.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        /* 2. UPROSTŘED: POPIS */
-        .header-center {
-            flex: 1.5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .subtitle {
-            font-size: 0.9rem;
-            font-weight: 300;
-            opacity: 0.9;
-            line-height: 1.4;
-            max-width: 400px;
-            border-left: 2px solid rgba(255,255,255,0.4);
-            border-right: 2px solid rgba(255,255,255,0.4);
-            padding: 0 20px;
-        }
+        .header-center { flex: 1.5; display: flex; justify-content: center; align-items: center; text-align: center; }
+        .subtitle { font-size: 0.9rem; font-weight: 300; opacity: 0.9; line-height: 1.4; max-width: 400px; border-left: 2px solid rgba(255,255,255,0.4); border-right: 2px solid rgba(255,255,255,0.4); padding: 0 20px; }
         
         .social-links { margin-top: 5px; }
         .social-links a { color: white; opacity: 0.7; margin: 0 5px; transition: 0.3s; }
         .social-links a:hover { opacity: 1; color: #4ade80; }
 
-
-        /* 3. VPRAVO: SKILLS (Glassmorphism) */
-        .header-right {
-            flex: 1.5;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 6px;
-            max-width: 350px;
-        }
-
-        .skill-tag {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: background 0.3s;
-        }
+        .header-right { flex: 1.5; display: flex; justify-content: flex-end; align-items: center; }
+        .skills-container { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 350px; }
+        .skill-tag { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.15); transition: background 0.3s; }
         .skill-tag:hover { background: rgba(255, 255, 255, 0.2); }
 
         /* --- CAROUSEL SEKCE --- */
         .carousel-container {
-            flex-grow: 1;
+            /* TADY JE KOUZLO: flex-grow 1 roztáhne carousel do zbytku obrazovky */
+            flex-grow: 1; 
             width: 100%;
             position: relative;
             background: #000;
+            overflow: hidden;
         }
 
-        .slide {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: flex-end;
-        }
-
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; background-size: cover; background-position: center; display: flex; align-items: flex-end; }
         .slide.active { opacity: 1; z-index: 10; }
+        .slide::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-gradient); z-index: 1; }
 
-        .slide::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--overlay-gradient);
-            z-index: 1;
-        }
+        .slide-content { position: relative; z-index: 20; width: 100%; padding: 3rem 5rem; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; height: 100%; color: white; padding-bottom: 6rem; }
 
-        .slide-content {
-            position: relative;
-            z-index: 20;
-            width: 100%;
-            padding: 3rem 5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-end; /* Defaultně dole (pro PC) */
-            height: 100%;
-            color: white;
-            padding-bottom: 6rem;
-        }
+        .project-title { font-size: 3.5rem; font-weight: 800; line-height: 1.1; text-transform: uppercase; margin-bottom: 1rem; text-shadow: 0 4px 20px rgba(0,0,0,0.5); max-width: 900px; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+        .proj-pill { background: rgba(255,255,255,0.95); color: #1e293b; padding: 5px 14px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; box-shadow: 0 2px 10px rgba(0,0,0,0.3); text-transform: uppercase; }
+        .project-desc { font-size: 1.1rem; font-weight: 300; opacity: 0.95; max-width: 700px; margin-bottom: 2rem; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
 
-        /* STYLING TEXTŮ V SLIDERU */
-        .project-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            max-width: 900px;
-        }
+        .btn-open { display: inline-flex; align-items: center; gap: 10px; color: white; text-decoration: none; border: 2px solid white; padding: 12px 30px; border-radius: 50px; font-weight: 600; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); }
+        .btn-open:hover { background: white; color: var(--primary-start); padding-right: 40px; }
 
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .proj-pill {
-            background: rgba(255,255,255,0.95);
-            color: #1e293b;
-            padding: 5px 14px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            text-transform: uppercase;
-        }
-
-        .project-desc {
-            font-size: 1.1rem;
-            font-weight: 300;
-            opacity: 0.95;
-            max-width: 700px;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
-        }
-
-        /* Tlačítko pod popisem */
-        .btn-open {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-            text-decoration: none;
-            border: 2px solid white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px);
-        }
-        
-        .btn-open:hover { 
-            background: white; 
-            color: var(--primary-start); 
-            padding-right: 40px; 
-        }
-
-        /* Ovládání */
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            font-size: 1.5rem;
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 50;
-            transition: all 0.3s;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 1.5rem; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; z-index: 50; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
         .nav-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.1) translateY(-50%); }
         .prev { left: 2rem; }
         .next { right: 2rem; }
 
-        .dots {
-            position: absolute;
-            bottom: 2.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-            z-index: 50;
-        }
-        .dot {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .dots { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 50; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.3s; }
         .dot.active { background: white; transform: scale(1.3); }
+
+        /* --- PROJECT GRID SECTION --- */
+        .project-grid-section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .section-title { text-align: center; font-size: 1.8rem; font-weight: 700; margin-bottom: 3rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-light); border-bottom: 1px solid var(--border-dark); padding-bottom: 1rem; display: inline-block; margin-left: 50%; transform: translateX(-50%); }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        .grid-card { background-color: var(--card-bg); border: 1px solid var(--border-dark); border-radius: 12px; overflow: hidden; transition: transform 0.3s, border-color 0.3s; text-decoration: none; color: var(--text-light); display: flex; flex-direction: column; }
+        .grid-card:hover { transform: translateY(-5px); border-color: var(--primary-start); }
+        .card-img { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid var(--border-dark); }
+        .card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; }
+       .card-tags {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 0.8rem; /* Menší mezera */
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* NOVÉ: Styl pro krátký popisek v kartě */
+        .card-text {
+            font-size: 0.85rem;
+            color: #cccccc; /* Světle šedá pro dobrou čitelnost na černém */
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            flex-grow: 1; /* Tlačí tlačítko dolů, aby byly karty stejně vysoké */
+        }
+
+        /* UPRAVENÉ: Bílé tlačítko */
+        .card-link {
+            margin-top: auto;
+            color: #ffffff; /* Bílá barva */
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .grid-card:hover .card-link {
+            color: var(--primary-start); /* Při najetí zezelená (volitelné) */
+        }
 
         /* --- MOBILNÍ VERZE --- */
         @media (max-width: 1024px) {
             header { 
-                height: auto; 
-                padding: 1rem; 
-                flex-direction: column; 
-                gap: 5px; 
-                text-align: center;
-                min-height: auto; /* Zrušení min-height */
-                justify-content: center;
-                padding-bottom: 10px;
+                height: auto; /* Na mobilu výška dle obsahu */
+                padding: 1rem; flex-direction: column; gap: 5px; text-align: center; justify-content: center; padding-bottom: 15px;
             }
-            
             .header-right, .social-links { display: none; }
-
             .header-left { order: 1; width: 100%; text-align: center; }
             .header-center { order: 2; width: 100%; margin-top: 2px; }
-
-            /* Zmenšené písmo pro mobil */
+            
             h1 { font-size: 1.5rem; margin-bottom: 0; }
+            .subtitle { font-size: 0.8rem; border: none; padding: 0; max-width: 100%; opacity: 0.8; }
             
-            .subtitle { 
-                font-size: 0.8rem; 
-                border: none; 
-                padding: 0; 
-                max-width: 100%; 
-                opacity: 0.8;
-            }
-            
-            /* --- ÚPRAVA SLIDERU PRO MOBIL (TEXT NAHOŘE) --- */
-            .slide-content {
-                justify-content: flex-start; /* Zarovnání nahoru */
-                padding-top: 12px; /* Tvoje mezera 12px od headeru */
-                padding-left: 1.5rem;
-                padding-right: 1.5rem;
-                align-items: center; /* Na mobilu středíme text */
-                text-align: center;
+            .carousel-container { 
+                /* Na mobilu flex-grow funguje stejně, ale header je vyšší/nižší dle obsahu */
+                /* Nic neměním, wrapper to drží */
             }
 
-            .project-title { 
-                font-size: 1.4rem; /* O 30% menší */
-                text-shadow: 0 2px 15px rgba(0,0,0,0.8); /* Silnější stín pro čitelnost nahoře */
-            }
-
+            .slide-content { justify-content: flex-start; padding-top: 12px; padding-left: 1.5rem; padding-right: 1.5rem; align-items: center; text-align: center; }
+            .project-title { font-size: 1.4rem; text-shadow: 0 2px 15px rgba(0,0,0,0.8); }
             .project-tags { justify-content: center; }
-
+            
             .nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
             .prev { left: 10px; }
             .next { right: 10px; }
+            
+            .project-grid-section { padding: 2rem 1rem; }
+            .grid-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-left">
-            <h1>JIŘÍ ČAPEK</h1>
-        </div>
+    <div class="landing-wrapper">
+        <header>
+            <div class="header-left">
+                <h1>JIŘÍ ČAPEK</h1>
+            </div>
 
-        <div class="header-center">
-            <div>
-                <p class="subtitle">Systems Engineering Student & Data Analyst <br> connecting Economics, Data & Design.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fas fa-envelope"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
+            <div class="header-center">
+                <div>
+                    <p class="subtitle">Systems Engineering Student & Data Analyst <br> connecting Economics, Data & Design.</p>
+              
                 </div>
             </div>
-        </div>
 
-        <div class="header-right">
-            <div class="skills-container">
-                <span class="skill-tag">Python</span>
-                <span class="skill-tag">SQL</span>
-                <span class="skill-tag">Power BI</span>
-                <span class="skill-tag">Econometrics</span>
-                <span class="skill-tag">System Dynamics</span>
-                <span class="skill-tag">UX Design</span>
+            <div class="header-right">
+                <div class="skills-container">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">SQL</span>
+                    <span class="skill-tag">Power BI</span>
+                    <span class="skill-tag">Econometrics</span>
+                    <span class="skill-tag">System Dynamics</span>
+                    <span class="skill-tag">UX Design</span>
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <section class="carousel-container" id="carousel">
-        <button class="nav-btn prev" onclick="manualMove(-1)"><i class="fas fa-arrow-left"></i></button>
-        <button class="nav-btn next" onclick="manualMove(1)"><i class="fas fa-arrow-right"></i></button>
-        
-        <div class="dots" id="dots-container"></div>
+        <section class="carousel-container" id="carousel">
+            <button class="nav-btn prev" onclick="manualMove(-1)"><i class="fas fa-arrow-left"></i></button>
+            <button class="nav-btn next" onclick="manualMove(1)"><i class="fas fa-arrow-right"></i></button>
+            
+            <div class="dots" id="dots-container"></div>
         </section>
+    </div>
+    <section class="project-grid-section">
+        <h2 class="section-title">Explore All Projects</h2>
+        <div class="grid-container" id="projects-grid"></div>
+    </section>
+
+    <footer>
+        <p style="text-align: center; padding: 2rem; color: #64748b; font-size: 0.8rem;">
+            &copy; 2025 Jiří Čapek. Portfolio built with passion.
+        </p>
+    </footer>
 
     <script>
-        // DATA PROJEKTŮ - KOMPLETNÍ SEZNAM DLE CV
         const projects = [
-            {
-                title: "Forest Protection Logistics Optimization / TSPTW Model",
-                tags: ["Python", "MS Excel", "OpenSolver", "Operations Research"],
-                desc: "Bachelor's Thesis: Application of Operations Research to optimize inspection logistics using the TSPTW model. Constructed a mathematical model to minimize fieldwork time.",
-                img: "bpheader.png", // Mapa
-                link: "project-forest.html"
-            },
-            {
-                title: "Econometric Modeling of Timber Market Dynamics",
-                tags: ["Gretl", "MS Excel", "Econometrics", "TSLS"],
-                desc: "Development of a simultaneous timber market model using the TSLS method to capture interdependent nature of Larch and Pine harvesting. Simulation of price scenarios.",
-                img: "econometricsheader.png", // Les
-                link: "project-timber.html"
-            },
-            {
-                title: "Loan Eligibility Predictor / Probability of Default model",
-                tags: ["Python", "Scikit-learn", "ML", "Logistic Regression"],
-                desc: "End-to-end development of a credit risk (PD) model with deployment to a web app. Logistic regression training and validation using standard risk metrics (ROC, K-S).",
-                img: "pdheader.png", // Finance
-                link: "project-loan.html"
-            },
-            {
-                title: "Relational DB Design & Implementation for Sports Season Analytics",
-                tags: ["SQL", "PostgreSQL", "DB Modeling", "Relational Algebra"],
-                desc: "Complete relational database design from ER Diagram to physical implementation for a football league. Robust structure for tracking match statistics and business side.",
-                img: "dbheader.png", // Stadion
-                link: "project-sports-db.html"
-            },
-            {
-                title: "Wildlife Management & Economic Simulation (System Dynamics)",
-                tags: ["Vensim", "System Dynamics", "Simulation Modeling"],
-                desc: "Application of System Dynamics to simulate the management of a hunting association. Analyzing 'Limits to Growth' archetype in a real-world biological system.",
-                img: "sdheader.png", // Jelen
-                link: "project-wildlife.html"
-            },
-            {
-                title: "Marketing Mix Analysis Prusa Research and Data Visualization",
-                tags: ["Power BI", "Excel", "Market Research", "Data Visualisation"],
-                desc: "Realization of a complete end-to-end data-marketing project. Interactive Power BI dashboard analyzing price sensitivity and purchasing behavior of Prusa customers.",
-                img: "prusaheader.png", // Grafy
-                link: "project-prusa.html"
-            },
-            {
-                title: "Bowling Performance Analytics: Advanced DAX & Custom KPIs",
-                tags: ["Power BI", "DAX", "Statistical Analysis", "Data Storytelling"],
-                desc: "Advanced analytical dashboard to track team performance using weighted moving averages. Implementation of 'Magic Quadrant' visualization for player segmentation.",
-                img: "bowlingheader.png", // Bowling
-                link: "project-bowling.html"
-            }
+            { title: "Forest Protection Logistics Optimization / TSPTW Model", tags: ["Python", "MS Excel", "OpenSolver", "Operations Research"], desc: "Bachelor's Thesis: Application of Operations Research to optimize inspection logistics using the TSPTW model. Constructed a mathematical model to minimize fieldwork time.", img: "bpheader.png", link: "project-forest.html" },
+            { title: "Econometric Modeling of Timber Market Dynamics", tags: ["Gretl", "MS Excel", "Econometrics", "TSLS"], desc: "Development of a simultaneous timber market model using the TSLS method to capture interdependent nature of Larch and Pine harvesting. Simulation of price scenarios.", img: "econometricsheader.png", link: "project-timber.html" },
+            { title: "Loan Eligibility Predictor / Probability of Default model", tags: ["Python", "Scikit-learn", "ML", "Logistic Regression"], desc: "End-to-end development of a credit risk (PD) model with deployment to a web app. Logistic regression training and validation using standard risk metrics (ROC, K-S).", img: "pdheader.png", link: "project-loan.html" },
+            { title: "Relational DB Design & Implementation for Sports Season Analytics", tags: ["SQL", "PostgreSQL", "DB Modeling", "Relational Algebra"], desc: "Complete relational database design from ER Diagram to physical implementation for a football league. Robust structure for tracking match statistics and business side.", img: "dbheader.png", link: "project-sports-db.html" },
+            { title: "Wildlife Management & Economic Simulation (System Dynamics)", tags: ["Vensim", "System Dynamics", "Simulation Modeling"], desc: "Application of System Dynamics to simulate the management of a hunting association. Analyzing 'Limits to Growth' archetype in a real-world biological system.", img: "sdheader.png", link: "project-wildlife.html" },
+            { title: "Marketing Mix Analysis Prusa Research and Data Visualization", tags: ["Power BI", "Excel", "Market Research", "Data Visualisation"], desc: "Realization of a complete end-to-end data-marketing project. Interactive Power BI dashboard analyzing price sensitivity and purchasing behavior of Prusa customers.", img: "prusaheader.png", link: "project-prusa.html" },
+            { title: "Bowling Performance Analytics: Advanced DAX & Custom KPIs", tags: ["Power BI", "DAX", "Statistical Analysis", "Data Storytelling"], desc: "Advanced analytical dashboard to track team performance using weighted moving averages. Implementation of 'Magic Quadrant' visualization for player segmentation.", img: "bowlingheader.png", link: "project-bowling.html" }
         ];
 
         const container = document.getElementById('carousel');
@@ -411,72 +244,68 @@
                 slide.classList.add('slide');
                 if (index === 0) slide.classList.add('active');
                 slide.style.backgroundImage = `url('${proj.img}')`;
-                
                 const tagsHtml = proj.tags.map(tag => `<span class="proj-pill">${tag}</span>`).join('');
-
-                slide.innerHTML = `
-                    <div class="slide-content">
-                        <h2 class="project-title">${proj.title}</h2>
-                        
-                        <div class="project-tags">${tagsHtml}</div>
-                        
-                        <p class="project-desc">${proj.desc}</p>
-                        
-                        <a href="${proj.link}" class="btn-open">
-                            View Project <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                `;
+                slide.innerHTML = `<div class="slide-content"><h2 class="project-title">${proj.title}</h2><div class="project-tags">${tagsHtml}</div><p class="project-desc">${proj.desc}</p><a href="${proj.link}" class="btn-open">View Project <i class="fas fa-arrow-right"></i></a></div>`;
                 container.appendChild(slide);
-
                 const dot = document.createElement('div');
                 dot.classList.add('dot');
                 if (index === 0) dot.classList.add('active');
                 dot.onclick = () => manualGoTo(index);
                 dotsContainer.appendChild(dot);
             });
-
             startAutoPlay();
         }
 
-        function updateClasses() {
-            const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.dot');
+     function initGrid() {
+            const gridContainer = document.getElementById('projects-grid');
+            
+            projects.forEach(proj => {
+                const card = document.createElement('a');
+                card.href = proj.link;
+                card.className = 'grid-card';
+                
+                // 1. Změna: 3 tagy místo 2
+                const shortTags = proj.tags.slice(0, 3).join(' • ');
 
-            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
-            dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+                // 2. Změna: Vytvoření zkráceného popisu (cca 100 znaků)
+                // Pokud je popis delší než 100 znaků, ořízne se a přidá "..."
+                let shortDesc = proj.desc;
+                if (shortDesc.length > 100) {
+                    shortDesc = shortDesc.substring(0, 100).trim() + "...";
+                }
+
+                card.innerHTML = `
+                    <img src="${proj.img}" alt="${proj.title}" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">${proj.title}</h3>
+                        <div class="card-tags">${shortTags}</div>
+                        
+                        <p class="card-text">${shortDesc}</p>
+                        
+                        <div class="card-link">View Details <i class="fas fa-arrow-right"></i></div>
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            });
         }
 
+        function updateClasses() {
+            document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+        }
         function moveSlide(dir) {
             currentSlide += dir;
             if (currentSlide >= projects.length) currentSlide = 0;
             if (currentSlide < 0) currentSlide = projects.length - 1;
             updateClasses();
         }
-
-        function startAutoPlay() {
-            slideInterval = setInterval(() => {
-                moveSlide(1);
-            }, 5000); // 5 sekund
-        }
-
-        function resetTimer() {
-            clearInterval(slideInterval);
-            startAutoPlay();
-        }
-
-        function manualMove(dir) {
-            moveSlide(dir);
-            resetTimer();
-        }
-
-        function manualGoTo(index) {
-            currentSlide = index;
-            updateClasses();
-            resetTimer();
-        }
+        function startAutoPlay() { slideInterval = setInterval(() => { moveSlide(1); }, 5000); }
+        function resetTimer() { clearInterval(slideInterval); startAutoPlay(); }
+        function manualMove(dir) { moveSlide(dir); resetTimer(); }
+        function manualGoTo(index) { currentSlide = index; updateClasses(); resetTimer(); }
 
         initCarousel();
+        initGrid();
     </script>
 </body>
 </html>

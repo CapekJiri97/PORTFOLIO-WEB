@@ -9,6 +9,7 @@
     
     <style>
         :root {
+            /* Tmavě zelená paleta */
             --primary: #38655D;       
             --primary-dark: #294D46;
             --accent: #4ade80;
@@ -37,17 +38,16 @@
         .hero-split { display: flex; min-height: 80vh; background: white; }
         .hero-left { flex: 1; padding: 4rem; display: flex; flex-direction: column; justify-content: center; }
         .hero-right { flex: 1; background-color: #f1f5f9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-            .hero-right::before { content: ''; position: absolute; width: 100%; height: 100%; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; opacity: 0.5; }
-             .hero-image {
+        
+        .hero-right::before { content: ''; position: absolute; width: 100%; height: 100%; background-image: url('https://images.unsplash.com/photo-1533575770077-052fa2c609fc?q=80&w=1920&auto=format&fit=crop'); background-size: cover; opacity: 0.3; }
+         .hero-image {
             width: 100%;        /* Roztáhne na celou šířku */
             height: 100%;       /* Roztáhne na celou výšku */
             object-fit: cover;  /* Zásadní: "Cover" pokryje celou plochu (jako pozadí) */
             
             z-index: 2;
         }
-        /* Pozadí vpravo - abstraktní data nebo bowling */
-        .hero-right::before { content: ''; position: absolute; width: 100%; height: 100%; background-image: url('https://images.unsplash.com/photo-1533575770077-052fa2c609fc?q=80&w=1920&auto=format&fit=crop'); background-size: cover; opacity: 0.3; }
-        
+
         .hero-badge { background: #e0f2fe; color: #0284c7; padding: 5px 12px; border-radius: 4px; font-weight: 600; font-size: 0.8rem; width: fit-content; margin-bottom: 1rem; }
         h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1.5rem; color: var(--primary-dark); }
         .lead { font-size: 1.1rem; color: #64748b; margin-bottom: 2rem; max-width: 500px; }
@@ -64,15 +64,16 @@
         .step-title { font-size: 1.4rem; color: var(--text-main); margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
         .step-title i { color: var(--primary); opacity: 0.8; }
 
-        .code-block { background: var(--code-bg); color: #d4d4d4; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9rem; overflow-x: auto; margin: 1.5rem 0; border-left: 4px solid var(--accent); }
+        /* CODE BLOCKS */
+        .code-block { background: var(--code-bg); color: #d4d4d4; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85rem; overflow-x: auto; margin: 1.5rem 0; border-left: 4px solid var(--accent); white-space: pre; }
         .keyword { color: #569cd6; } .string { color: #ce9178; } .function { color: #dcdcaa; } .comment { color: #6a9955; font-style: italic; }
 
         .project-image { width: 100%; border-radius: 8px; border: 1px solid #e2e8f0; margin: 1rem 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        /* METRICS (KPIs) */
+        /* METRICS */
         .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 2rem; }
         .metric-card { background: #f0fdf4; padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid #dcfce7; display: flex; flex-direction: column; justify-content: center; }
-        .metric-value { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        .metric-value { font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
         .metric-label { font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
 
         /* REFLECTION BOX */
@@ -80,7 +81,96 @@
         .reflection-card::before { background: #10b981; }
 
         footer { text-align: center; padding: 3rem; border-top: 1px solid var(--border); color: #64748b; }
+   /* --- MORE PROJECTS SECTION --- */
+        .more-projects {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 4rem;
+        }
 
+        .more-projects-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .projects-grid {
+            display: grid;
+            /* 3 sloupce na PC */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px;
+        }
+
+        .project-tile {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Aby obrázek nepřetekl rohy */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            height: 100%;
+        }
+
+        .project-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        /* Styl pro obrázek v dlaždici */
+        .tile-image {
+            width: 100%;
+            height: 140px; /* Fixní výška pro sjednocení */
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tile-content {
+            padding: 1.2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .tile-content h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .tile-tag {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+
+        /* Mobilní verze: 1 sloupec */
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .tile-image {
+                height: 160px; /* Na mobilu trochu vyšší obrázek */
+            }
+        }
         @media (max-width: 900px) { .hero-split { flex-direction: column; } .hero-right { height: 300px; } .hero-left { padding: 2rem; } h1 { font-size: 2.2rem; } }
     </style>
 </head>
@@ -94,94 +184,133 @@
     <header class="hero-split">
         <div class="hero-left">
             <span class="hero-badge">Power BI & Advanced DAX</span>
-            <h1>Bowling Performance Analytics</h1>
+            <h1>Bowling Team Analytics</h1>
             <p class="lead">
-                A "passion project" applying advanced data analytics to sports. Moving beyond simple averages to track <strong>consistency</strong>, <strong>mental endurance</strong>, and <strong>current form</strong> using custom KPIs.
+                A passion project for my hobby bowling team. We moved beyond simple scoreboards to settle friendly debates: <strong>Who chokes under pressure?</strong> And <strong>who is the most consistent player?</strong>
             </p>
-            <a href="#" class="btn-live">
-                <i class="fas fa-chart-bar"></i> View Dashboard
+            <a href="Bowling.pdf" class="btn-live" target="_blank">
+                <i class="fas fa-file-pdf"></i> View Dashboard
             </a>
         </div>
-     
-         <div class="hero-right">
+              <div class="hero-right">
             <img src="bowlingpc.png" alt="Loan Probability Model Header" class="hero-image">
         </div>
-    </header>
 
-    <section class="timeline-section">
+    </header>
+<section class="timeline-section">
         
         <div class="step-card">
-            <h2 class="step-title"><i class="fas fa-question-circle"></i> 1. The Challenge: Beyond the Average</h2>
+            <h2 class="step-title"><i class="fas fa-users"></i> 1. The Challenge: Why we suck?</h2>
             <p>
-                Standard bowling statistics (average score) often mask the true nature of a player's performance. A player with a 150 average might be wildly inconsistent, while another is steady. 
-                I wanted to answer questions like:
+                We noticed a paradox: We often felt like we played well (lots of pins down), but the final scores were average. We also had players who started strong but collapsed at the end.
             </p>
             <ul style="margin: 1rem 0 1rem 2rem; color: #475569;">
-                <li>Who performs better under pressure (later stages)?</li>
-                <li>Is a player's current form trending up or down?</li>
-                <li>Who is the most consistent player regardless of score?</li>
+                <li><strong>The Efficiency Gap:</strong> Why don't 9 knocked pins translate to points?</li>
+                <li><strong>The "Choke" Factor:</strong> Who performs better in the Late Game?</li>
+                <li><strong>Form Tracking:</strong> Who is currently "hot" above their baseline?</li>
             </ul>
         </div>
 
         <div class="step-card">
             <h2 class="step-title"><i class="fas fa-code"></i> 2. Advanced DAX Engineering</h2>
             <p>
-                I engineered several custom measures using functions like <code>CALCULATE</code>, <code>FILTER</code>, <code>UNION</code>, and <code>SUMMARIZE</code>.
+                I engineered custom measures using advanced table functions and dynamic filtering.
             </p>
             
-            <div style="margin-top: 20px;">
-                <strong>1. Player Consistency (Coefficient of Variation):</strong><br>
-                <span style="font-size: 0.9rem; color: #64748b;">Calculated the relative standard deviation to measure stability. Helps identify "Wildcards" vs. "Steady Eddies".</span>
-            </div>
-
-            <div style="margin-top: 20px;">
-                <strong>2. Current Form (Weighted Moving Average):</strong><br>
-                <span style="font-size: 0.9rem; color: #64748b;">Assigns higher weights to recent games (50% last, 33% previous, 17% before) to track immediate trends.</span>
+            <div style="margin-top: 30px;">
+                <strong>1. Weighted Form (Forma 2):</strong><br>
+                <span style="font-size: 0.9rem; color: #64748b;">
+                    Calculates relative performance change using <code>TOPN</code> to compare the last played day against specific historical context.
+                </span>
             </div>
 
             <div class="code-block">
-<span class="comment">/* DAX Formula: Weighted Moving Average 
-   Logic: Calculate average where recent games have higher impact.
-   (Code placeholder - will be inserted later)
-*/</span><br>
-<br>
-<span class="keyword">VAR</span> LastGame = ...<br>
-<span class="keyword">VAR</span> Weight1 = 0.5<br>
-<span class="keyword">RETURN</span><br>
-&nbsp;&nbsp;<span class="function">CALCULATE</span>( ... )
+<span class="comment">-- Score of previous games (History Context)</span>
+<span class="keyword">VAR</span> skorePredchoziHry =
+    <span class="function">SUMX</span>(
+        <span class="function">TOPN</span>(
+            pocetHerPosledniDen, 
+            hryPredchozi, 
+            'Tabulka1'[Den], DESC, 
+            'Tabulka1'[PořadíHry], DESC
+        ),
+        'Tabulka1'[Skóre 10. kolo]
+    )
+
+<span class="comment">-- Calculate % change vs History</span>
+<span class="keyword">VAR</span> vypocet = 
+    <span class="function">IF</span>(<span class="function">NOT</span>(<span class="function">ISBLANK</span>(prumerPredchoziHry)),
+       (prumerPosledniDen - prumerPredchoziHry) / prumerPredchoziHry,
+       [Forma]
+    )
+
+<span class="keyword">RETURN</span> vypocet
             </div>
 
-            <div style="margin-top: 20px;">
-                <strong>3. Pinfall Efficiency:</strong><br>
-                <span style="font-size: 0.9rem; color: #64748b;">Using <code>UNION</code> and <code>SELECTCOLUMNS</code> to virtually unpivot frame-by-frame data and normalize strikes/spares.</span>
+            <div style="margin-top: 30px;">
+                <strong>2. Relative Consistency (Virtual Table Aggregation):</strong><br>
+                <span style="font-size: 0.9rem; color: #64748b;">
+                    Uses <code>SUMMARIZE</code> to build an in-memory table of players and their Coefficient of Variation (CoV), comparing individual stability against the team average.
+                </span>
+            </div>
+
+            <div class="code-block">
+<span class="comment">-- Compare Player's consistency vs Team Average</span>
+<span class="keyword">VAR</span> prumer_CoV = 
+    <span class="function">CALCULATE</span>(
+        <span class="function">AVERAGEX</span>(
+            <span class="function">SUMMARIZE</span>(
+                Tabulka1,
+                Tabulka1[Hráč],
+                "CoV_Hráč", [koeficient variability mezi hody]
+            ),
+            [CoV_Hráč]
+        ),
+        <span class="function">ALL</span>(Tabulka1)
+    )
+
+<span class="keyword">RETURN</span> prumer_CoV - [koeficient variability mezi hody]
             </div>
         </div>
 
         <div class="step-card">
-            <h2 class="step-title"><i class="fas fa-chart-scatter"></i> 3. Visualization: The Magic Quadrant</h2>
+            <h2 class="step-title"><i class="fas fa-chart-scatter"></i> 3. +alization: Player Quadrant</h2>
             <p>
-                Inspired by Gartner's business charts, I created a scatter plot correlating <strong>"Form"</strong> (Y-axis) vs. <strong>"Consistency"</strong> (X-axis).
-                This allows for instant player segmentation.
+            I created a scatter plot to segment our friends into archetypes like "The Wildcard" or "Steady Eddie".
             </p>
+            
+            <div class="metrics-grid" style="margin-bottom: 20px;">
+                <div class="metric-card">
+                    <div class="metric-value">X-Axis</div>
+                    <div class="metric-label">Relative Consistency</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">Y-Axis</div>
+                    <div class="metric-label">Form 2 (Trend)</div>
+                </div>
+            </div>
+
             <img src="magic.png" alt="Magic Quadrant" class="project-image">
         </div>
 
         <div class="step-card">
-            <h2 class="step-title"><i class="fas fa-lightbulb"></i> 4. Key Insights</h2>
+            <h2 class="step-title"><i class="fas fa-lightbulb"></i> 4. Key Findings</h2>
             <p>
-                The dashboard revealed critical insights that simple averages missed:
+                The data confirmed our suspicions about the "Efficiency Gap".
             </p>
             
-            <div class="metrics-grid" style="grid-template-columns: 1fr 1fr;">
-                <div class="metric-card">
-                    <div class="metric-value" style="color: #d97706;">Risk Factor</div>
-                    <div class="metric-label">High Score ≠ Consistency</div>
-                    <p style="font-size: 0.85rem; color: #64748b; margin-top: 10px;">The player with the highest absolute score was actually the least consistent.</p>
+            <div class="metrics-grid">
+                <div class="metric-card" style="background: #ecfdf5; border-color: var(--primary);">
+                    <div class="metric-label">The "7-9 Pin" Trap</div>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-top: 10px;">
+                        We consistently knocked down 7-9 pins but failed to score high because of <strong>poor spare conversion</strong>.
+                    </p>
                 </div>
                 <div class="metric-card" style="background: #ecfdf5; border-color: var(--primary);">
-                    <div class="metric-value">+20%</div>
-                    <div class="metric-label">Late Game Surge</div>
-                    <p style="font-size: 0.85rem; color: #64748b; margin-top: 10px;">Identified an "underrated" player who performs significantly better under pressure.</p>
+                    <div class="metric-label">Clutch Performance</div>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-top: 10px;">
+                        Identified players who thrive under pressure—either by converting critical strikes/spares or consistently dominating the second half of the game.
+                    </p>
                 </div>
             </div>
         </div>
@@ -189,12 +318,67 @@
         <div class="step-card reflection-card">
             <h2 class="step-title"><i class="fas fa-user-edit"></i> Personal Reflection</h2>
             <p>
-                This project was a deep dive into <strong>DAX logic</strong>. Writing formulas that handle text-based scores ("Strike"/"Spare") and converting them into calculable weighted metrics honed my ability to solve complex data engineering problems within Power BI.
+                What started as fun for friends turned into a real technical challenge. Converting bowling rules—where the sequence of throws matters—into DAX formulas was harder than it looks. It taught me how to handle complex row context and logic better than any textbook example.
             </p>
         </div>
 
     </section>
+  <section class="more-projects">
+        <h3 class="more-projects-title">Explore Other Projects</h3>
+        
+        <div class="projects-grid">
+            
+            <a href="project-forest.html" class="project-tile">
+                <img src="bpheader.png" alt="Forest Logistics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Forest Logistics Optimization</h4>
+                    <span class="tile-tag">Operations Research</span>
+                </div>
+            </a>
 
+            <a href="project-timber.html" class="project-tile">
+                <img src="econometricsheader.png" alt="Timber Market" class="tile-image">
+                <div class="tile-content">
+                    <h4>Timber Market Dynamics</h4>
+                    <span class="tile-tag">Econometrics</span>
+                </div>
+            </a>
+
+            <a href="project-loan.html" class="project-tile">
+                <img src="pdheader.png" alt="Loan Predictor" class="tile-image">
+                <div class="tile-content">
+                    <h4>Loan Eligibility Model</h4>
+                    <span class="tile-tag">Machine Learning</span>
+                </div>
+            </a>
+
+            <a href="project-sports-db.html" class="project-tile">
+                <img src="dbheader.png" alt="Sports Database" class="tile-image">
+                <div class="tile-content">
+                    <h4>Sports DB System</h4>
+                    <span class="tile-tag">SQL & Database</span>
+                </div>
+            </a>
+
+            <a href="project-wildlife.html" class="project-tile">
+                <img src="sdheader.png" alt="Wildlife Simulation" class="tile-image">
+                <div class="tile-content">
+                    <h4>Wildlife Simulation</h4>
+                    <span class="tile-tag">System Dynamics</span>
+                </div>
+            </a>
+
+            <a href="project-prusa.html" class="project-tile">
+                <img src="prusaheader.png" alt="Prusa Analytics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Prusa Marketing Analysis</h4>
+                    <span class="tile-tag">Power BI & Marketing</span>
+                </div>
+            </a>
+
+
+        </div>
+    </section>
     <footer>
         <p>&copy; 2025 Jiří Čapek. Power BI & Sports Analytics.</p>
     </footer>

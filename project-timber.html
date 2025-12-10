@@ -242,7 +242,96 @@
             transition: 0.3s;
         }
         .btn-primary:hover { background: var(--primary-dark); box-shadow: 0 5px 15px rgba(56, 101, 93, 0.3); }
+   /* --- MORE PROJECTS SECTION --- */
+        .more-projects {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 4rem;
+        }
 
+        .more-projects-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .projects-grid {
+            display: grid;
+            /* 3 sloupce na PC */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px;
+        }
+
+        .project-tile {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Aby obrázek nepřetekl rohy */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            height: 100%;
+        }
+
+        .project-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        /* Styl pro obrázek v dlaždici */
+        .tile-image {
+            width: 100%;
+            height: 140px; /* Fixní výška pro sjednocení */
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tile-content {
+            padding: 1.2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .tile-content h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .tile-tag {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+
+        /* Mobilní verze: 1 sloupec */
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .tile-image {
+                height: 160px; /* Na mobilu trochu vyšší obrázek */
+            }
+        }
         @media (max-width: 768px) {
             h1 { font-size: 2rem; }
             .hero-meta { flex-direction: column; gap: 0.5rem; }
@@ -338,11 +427,66 @@
             </p>
         </div>
 
-        <div class="project-footer">
-            <a href="#" class="btn-primary"><i class="fab fa-github"></i> View Source / Documentation</a>
+    <div class="project-footer">
+            <a href="ekonometrie-lesnictvi.pdf" class="btn-primary" target="_blank"><i class="fas fa-file-pdf"></i> View Analysis PDF</a>
         </div>
 
     </section>
+  <section class="more-projects">
+        <h3 class="more-projects-title">Explore Other Projects</h3>
+        
+        <div class="projects-grid">
+            
+            <a href="project-forest.html" class="project-tile">
+                <img src="bpheader.png" alt="Forest Logistics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Forest Logistics Optimization</h4>
+                    <span class="tile-tag">Operations Research</span>
+                </div>
+            </a>
 
+
+            <a href="project-loan.html" class="project-tile">
+                <img src="pdheader.png" alt="Loan Predictor" class="tile-image">
+                <div class="tile-content">
+                    <h4>Loan Eligibility Model</h4>
+                    <span class="tile-tag">Machine Learning</span>
+                </div>
+            </a>
+
+            <a href="project-sports-db.html" class="project-tile">
+                <img src="dbheader.png" alt="Sports Database" class="tile-image">
+                <div class="tile-content">
+                    <h4>Sports DB System</h4>
+                    <span class="tile-tag">SQL & Database</span>
+                </div>
+            </a>
+
+            <a href="project-wildlife.html" class="project-tile">
+                <img src="sdheader.png" alt="Wildlife Simulation" class="tile-image">
+                <div class="tile-content">
+                    <h4>Wildlife Simulation</h4>
+                    <span class="tile-tag">System Dynamics</span>
+                </div>
+            </a>
+
+            <a href="project-prusa.html" class="project-tile">
+                <img src="prusaheader.png" alt="Prusa Analytics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Prusa Marketing Analysis</h4>
+                    <span class="tile-tag">Power BI & Marketing</span>
+                </div>
+            </a>
+
+            <a href="project-bowling.html" class="project-tile">
+                <img src="bowlingheader.png" alt="Bowling Analytics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Bowling Analytics</h4>
+                    <span class="tile-tag">Advanced DAX</span>
+                </div>
+            </a>
+
+        </div>
+    </section>
 </body>
 </html>

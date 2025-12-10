@@ -126,6 +126,98 @@
         .btn-primary { display: inline-block; background: var(--primary); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: 0.3s; }
         .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 101, 93, 0.3); }
 
+        /* Horní tlačítko v Hero */
+        .hero-btn { margin-top: 20px; }
+   /* --- MORE PROJECTS SECTION --- */
+        .more-projects {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 4rem;
+        }
+
+        .more-projects-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .projects-grid {
+            display: grid;
+            /* 3 sloupce na PC */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px;
+        }
+
+        .project-tile {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Aby obrázek nepřetekl rohy */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            height: 100%;
+        }
+
+        .project-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        /* Styl pro obrázek v dlaždici */
+        .tile-image {
+            width: 100%;
+            height: 140px; /* Fixní výška pro sjednocení */
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tile-content {
+            padding: 1.2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .tile-content h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .tile-tag {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+
+        /* Mobilní verze: 1 sloupec */
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .tile-image {
+                height: 160px; /* Na mobilu trochu vyšší obrázek */
+            }
+        }
         @media (max-width: 768px) { 
             h1 { font-size: 2rem; } 
             .pipeline-container { flex-direction: column; } 
@@ -147,8 +239,14 @@
             
             <div class="hero-meta">
                 <div class="meta-item"><i class="fas fa-chart-bar"></i> Tool: Power BI</div>
-                <div class="meta-item"><i class="fas fa-poll-h"></i> Source: Survey (B2C)</div>
-                <div class="meta-item"><i class="fas fa-bullseye"></i> Focus: 4P & Loyalty</div>
+                <div class="meta-item"><i class="fas fa-poll-h"></i> Source: Survey Data</div>
+                <div class="meta-item"><i class="fas fa-bullseye"></i> Focus: Brand Loyalty</div>
+            </div>
+
+            <div class="hero-btn">
+                <a href="Prusa.pdf" class="btn-primary" target="_blank">
+                    <i class="fas fa-file-pdf"></i> View Analysis PDF
+                </a>
             </div>
         </div>
     </section>
@@ -161,7 +259,7 @@
         
         <p>
             <strong>About this project:</strong><br>
-            The main goal of this survey was to understand the current market position of <strong>Prusa Research</strong>. I aimed to define the typical customer persona, identify key decision-making parameters (Speed, Quality, Price), and analyze how the <strong>4P marketing mix</strong> is perceived by Prusa owners compared to users of competing brands.
+            This project originated as a <strong>university group assignment</strong> focused on analyzing the market position of <strong>Prusa Research</strong>. I saw this as the perfect opportunity to get hands-on with <strong>Power BI for the first time</strong>, transforming our raw survey data into an interactive story focused on loyalty and pricing. My goal was to move beyond theory and work with real data to understand why customers choose Prusa over emerging competitors.
         </p>
 
         <h2>1. The Data Pipeline</h2>
@@ -171,43 +269,43 @@
             <div class="pipeline-step">
                 <div class="step-icon"><i class="fas fa-users"></i></div>
                 <span class="step-title">Data Collection</span>
-                <p class="step-desc">Designed a survey to analyze market trends, brand awareness sources (Social media, Events), and customer loyalty.</p>
+                <p class="step-desc">Designed a survey and distributed it to 3D printing communities. Gathered responses from hobbyists and pros.</p>
             </div>
             <div class="pipeline-step">
                 <div class="step-icon"><i class="fas fa-file-excel"></i></div>
                 <span class="step-title">Cleaning (Excel)</span>
-                <p class="step-desc">Processed raw data, categorized open-ended answers, and segmented users into "Prusa Owners" vs. "Competitors".</p>
+                <p class="step-desc">The raw data was messy. Used Excel to clean inconsistencies, categorize open-ended answers, and structure it.</p>
             </div>
             <div class="pipeline-step">
                 <div class="step-icon"><i class="fas fa-chart-pie"></i></div>
-                <span class="step-title">Viz (Power BI)</span>
-                <p class="step-desc">Built an interactive dashboard to visualize the 4P perception and loyalty metrics across different user segments.</p>
+                <span class="step-title">Visualisation (PBI)</span>
+                <p class="step-desc">Built an interactive dashboard to visualize trends, allowing filtering by user type (Owners vs. Non-owners).</p>
             </div>
         </div>
 
         <h2>2. Key Market Insights</h2>
-        <p>The analysis of the survey data revealed clear trends regarding the customer base and brand strength:</p>
+        <p>The analysis of survey data revealed clear trends regarding brand perception and market shifts:</p>
 
         <div class="insights-grid">
             
             <div class="insight-card">
-                <div class="insight-title"><i class="fas fa-user-tag"></i> Customer Persona</div>
+                <div class="insight-title"><i class="fas fa-heart"></i> Brand Loyalty</div>
                 <p class="insight-text">
-                    The typical customer is a <strong>Technical Enthusiast</strong> (Male, 26-45, HS/Uni education) who purchases 3D printing goods ~3x/month. This confirms Prusa's strong B2C position.
+                    Prusa users exhibit extremely high loyalty due to the <strong>open-source ecosystem</strong> and exceptional <strong>customer support</strong>, justifying the higher price point.
                 </p>
             </div>
 
             <div class="insight-card">
-                <div class="insight-title"><i class="fas fa-heart"></i> High Loyalty</div>
+                <div class="insight-title"><i class="fas fa-bolt"></i> The Bambu Threat</div>
                 <p class="insight-text">
-                    Prusa boasts exceptional loyalty (>50% retention) compared to competitors (>66% switchers). The main driver is <strong>Long-term Quality</strong> (42%), followed by Community and Ecosystem.
+                    There is a visible shift of users considering <strong>Bambu Lab</strong>. The data shows they are winning on "speed" and "convenience," identifying a key strategic threat.
                 </p>
             </div>
 
             <div class="insight-card">
-                <div class="insight-title"><i class="fas fa-balance-scale"></i> Perception Gap</div>
+                <div class="insight-title"><i class="fas fa-tags"></i> Price Sensitivity</div>
                 <p class="insight-text">
-                    Prusa owners rate the brand's <strong>Quality and Price</strong> significantly higher than non-owners. Interestingly, <em>Bambu Lab</em> owners are the most critical regarding Prusa's price/performance ratio.
+                    While <strong>Creality</strong> dominates the budget sector, Prusa owners are proven to be less price-sensitive if the quality and reliability are maintained.
                 </p>
             </div>
 
@@ -216,15 +314,72 @@
         <div class="reflection-box">
             <span class="reflection-title">Personal Reflection</span>
             <p style="margin-bottom: 0;">
-                This project taught me that data interpretation is as important as visualization. The survey revealed that while competitors may win on specs, Prusa's retention is driven by <strong>long-term trust</strong>. Translating these qualitative insights into a Power BI story was the key challenge and learning outcome.
+                This was my first end-to-end data project. The biggest challenge wasn't the visualization itself, but <strong>interpreting the data</strong> – turning rows in Excel into a coherent story about brand loyalty. It taught me that a dashboard doesn't need to be complex to provide valuable business insights.
             </p>
         </div>
 
         <div class="project-footer">
-            <a href="Prusa Research Analysis - eng.pdf" class="btn-primary" target="_blank"><i class="fas fa-file-pdf"></i> View Analysis PDF</a>
+            <a href="Prusa.pdf" class="btn-primary" target="_blank">
+                <i class="fas fa-file-pdf"></i> View Analysis PDF
+            </a>
         </div>
 
     </section>
+  <section class="more-projects">
+        <h3 class="more-projects-title">Explore Other Projects</h3>
+        
+        <div class="projects-grid">
+            
+            <a href="project-forest.html" class="project-tile">
+                <img src="bpheader.png" alt="Forest Logistics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Forest Logistics Optimization</h4>
+                    <span class="tile-tag">Operations Research</span>
+                </div>
+            </a>
 
+            <a href="project-timber.html" class="project-tile">
+                <img src="econometricsheader.png" alt="Timber Market" class="tile-image">
+                <div class="tile-content">
+                    <h4>Timber Market Dynamics</h4>
+                    <span class="tile-tag">Econometrics</span>
+                </div>
+            </a>
+
+            <a href="project-loan.html" class="project-tile">
+                <img src="pdheader.png" alt="Loan Predictor" class="tile-image">
+                <div class="tile-content">
+                    <h4>Loan Eligibility Model</h4>
+                    <span class="tile-tag">Machine Learning</span>
+                </div>
+            </a>
+
+            <a href="project-sports-db.html" class="project-tile">
+                <img src="dbheader.png" alt="Sports Database" class="tile-image">
+                <div class="tile-content">
+                    <h4>Sports DB System</h4>
+                    <span class="tile-tag">SQL & Database</span>
+                </div>
+            </a>
+
+            <a href="project-wildlife.html" class="project-tile">
+                <img src="sdheader.png" alt="Wildlife Simulation" class="tile-image">
+                <div class="tile-content">
+                    <h4>Wildlife Simulation</h4>
+                    <span class="tile-tag">System Dynamics</span>
+                </div>
+            </a>
+
+
+            <a href="project-bowling.html" class="project-tile">
+                <img src="bowlingheader.png" alt="Bowling Analytics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Bowling Analytics</h4>
+                    <span class="tile-tag">Advanced DAX</span>
+                </div>
+            </a>
+
+        </div>
+    </section>
 </body>
 </html>
