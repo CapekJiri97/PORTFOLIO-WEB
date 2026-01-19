@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPL Moneyball Optimization | Jiří Čapek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Zachování tvé palety + akcent pro FPL (fialová) */
+            --primary: #38655D;       
+            --primary-dark: #294D46;
+            --accent: #00FF87; /* FPL Green */
+            --fpl-purple: #37003c;
+            
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.7; }
+
+        /* NAVIGACE */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1rem 3rem;
+            display: flex; justify-content: space-between; align-items: center; color: white;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-back { color: white; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; opacity: 0.8; transition: 0.3s; }
+        .btn-back:hover { opacity: 1; transform: translateX(-5px); }
+
+        /* HERO SEKCE */
+        .project-hero {
+            background-color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-category {
+            color: var(--primary); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; display: inline-block;
+        }
+
+        h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; color: var(--text-main); }
+        
+        .hero-meta {
+            display: flex; justify-content: center; gap: 1.5rem; color: #64748b; font-size: 0.9rem; margin-bottom: 2rem; flex-wrap: wrap;
+        }
+        .meta-item i { color: var(--primary); margin-right: 5px; }
+
+        /* HLAVNÍ OBRÁZEK */
+        .main-image-wrapper {
+            max-width: 1100px; margin: -3rem auto 3rem auto; padding: 0 1rem; position: relative; z-index: 10;
+        }
+        .main-image { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); display: block; border: 1px solid white; }
+
+        /* OBSAH */
+        .content-section { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+
+        h2 { font-size: 1.8rem; color: var(--primary-dark); margin: 3.5rem 0 1.5rem 0; font-weight: 700; }
+        h3 { font-size: 1.3rem; margin: 1.5rem 0 0.5rem 0; color: var(--text-main); font-weight: 600; }
+        p { margin-bottom: 1.2rem; color: #334155; font-size: 1.05rem; text-align: justify; }
+        .content-image { width: 100%; border-radius: 8px; margin: 2rem 0; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        /* TECH STACK */
+        .tech-box { background: white; border-left: 5px solid var(--primary); padding: 2rem; border-radius: 8px; margin: 2rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .tech-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .tech-tag { background: #f1f5f9; padding: 6px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; color: var(--primary-dark); border: 1px solid var(--border); }
+
+        /* ARCHITECTURE DIAGRAM (Simple CSS) */
+        .arch-step { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; display: flex; gap: 15px; align-items: flex-start; transition: transform 0.3s; }
+        .arch-step:hover { transform: translateX(5px); border-color: var(--primary); }
+        .arch-icon { background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.2rem; }
+        .arch-content h4 { margin-bottom: 5px; color: var(--text-main); }
+        .arch-content p { font-size: 0.9rem; margin: 0; text-align: left; }
+
+        /* CODE BLOCKS */
+        .code-block { background: var(--code-bg); color: #e2e8f0; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', monospace; font-size: 0.85rem; overflow-x: auto; margin: 1.5rem 0; border-left: 4px solid var(--accent); white-space: pre; }
+        .keyword { color: #c678dd; } .string { color: #98c379; } .function { color: #61afef; } .comment { color: #7f848e; font-style: italic; }
+
+        /* REFLECTION */
+        .reflection-box { background: linear-gradient(to right, #ecfdf5, #f0fdfa); border: 1px solid #d1fae5; padding: 2rem; border-radius: 12px; margin-top: 4rem; position: relative; }
+        .reflection-box::before { content: '\f10d'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: -15px; left: 20px; background: var(--bg); padding: 0 10px; color: var(--primary); font-size: 1.5rem; }
+
+        /* MORE PROJECTS */
+        .more-projects { max-width: 1000px; margin: 4rem auto; padding: 4rem 2rem 0; border-top: 1px solid var(--border); }
+        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .project-tile { background: white; border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-main); display: flex; flex-direction: column; overflow: hidden; transition: all 0.3s ease; height: 100%; }
+        .project-tile:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .tile-image { width: 100%; height: 140px; object-fit: cover; border-bottom: 1px solid var(--border); }
+        .tile-content { padding: 1.2rem; text-align: center; }
+        .tile-tag { font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600; background: #f1f5f9; padding: 4px 10px; border-radius: 50px; }
+
+        @media (max-width: 768px) { 
+            h1 { font-size: 2rem; } 
+            .projects-grid { grid-template-columns: 1fr; }
+            .main-image-wrapper { margin-top: -2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <div class="nav-brand">Jiří Čapek</div>
+    </nav>
+
+    <section class="project-hero">
+        <div class="container">
+            <span class="project-category">Data Engineering & Optimization</span>
+            <h1>FPL Moneyball: Databricks Optimization Engine</h1>
+            
+            <div class="hero-meta">
+                <div class="meta-item"><i class="fas fa-server"></i> Databricks SQL</div>
+                <div class="meta-item"><i class="fas fa-brain"></i> Python PuLP</div>
+                <div class="meta-item"><i class="fas fa-chart-line"></i> Dashboarding</div>
+                <div class="meta-item"><i class="fas fa-cloud"></i> Hybrid ELT</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-image-wrapper">
+        <img src="fplheader 2.png" alt="FPL Optimization Dashboard" class="main-image">
+    </div>
+
+    <section class="content-section">
+        
+        <p>
+            <strong>The Goal:</strong> Stop guessing and start calculating. Fantasy Premier League (FPL) is played by millions, but most rely on intuition. I wanted to build a scientifically accurate <strong>"Moneyball" engine</strong> that selects the mathematically optimal squad based on current form, ROI, and constraints—building a full end-to-end data pipeline in the process.
+        </p>
+
+        <div class="tech-box">
+            <div class="tech-title">Technology Stack</div>
+            <div class="tech-list">
+                <span class="tech-tag">Databricks SQL</span>
+                <span class="tech-tag">Python (Pandas, Requests)</span>
+                <span class="tech-tag">Linear Programming (PuLP)</span>
+                <span class="tech-tag">JSON Parsing</span>
+                <span class="tech-tag">Medallion Architecture</span>
+            </div>
+        </div>
+
+        <h2>1. The Evolution: From Static CSV to Live API</h2>
+        <p>
+            This project wasn't easy. I started with a simple idea: download CSV files from GitHub. It worked, but it felt "static" and relied on someone else's data. I wanted <strong>Real Data Engineering</strong> experience.
+        </p>
+        <p>
+            So, I decided to switch to the <strong>Official Premier League API</strong>. This was a big challenge because the data was in complex, nested JSON format, not clean tables. Also, I faced a technical roadblock: <strong>Databricks Community Edition</strong> does not allow internet access for Python scripts.
+        </p>
+        <p>
+            I had to find a workaround. I designed a <strong>Hybrid ELT Architecture</strong> to bridge my local machine (with internet) and the cloud database.
+        </p>
+
+        <div style="margin: 2rem 0;">
+            <div class="arch-step">
+                <div class="arch-icon"><i class="fas fa-laptop-code"></i></div>
+                <div class="arch-content">
+                    <h4>1. Local Ingestion (Python)</h4>
+                    <p>I wrote a Python script to fetch the raw JSON from the API on my laptop, bypassing the cloud firewall restrictions.</p>
+                </div>
+            </div>
+            <div class="arch-step">
+                <div class="arch-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <div class="arch-content">
+                    <h4>2. Manual Load to Bronze</h4>
+                    <p>The raw data is uploaded to Databricks as the <code>bronze_json_raw</code> table. This is our immutable raw storage.</p>
+                </div>
+            </div>
+            <div class="arch-step">
+                <div class="arch-icon"><i class="fas fa-database"></i></div>
+                <div class="arch-content">
+                    <h4>3. Cloud Transformation (SQL)</h4>
+                    <p>Databricks SQL engine parses the nested JSON structure, cleans data types, and creates the <strong>Silver & Gold</strong> layers.</p>
+                </div>
+            </div>
+            <div class="arch-step">
+                <div class="arch-icon"><i class="fas fa-calculator"></i></div>
+                <div class="arch-content">
+                    <h4>4. Optimization & Viz</h4>
+                    <p>Finally, Python (PuLP) solves the math problem and feeds the results into a Dashboard.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>2. Data Engineering: Parsing JSON with SQL</h2>
+        <p>
+            The switch to the official API meant dealing with "messy" data. The API returns one giant JSON object with nested arrays. I used advanced SQL functions like <code>EXPLODE</code> to flatten the arrays and <code>CAST</code> to handle data types. This effectively implements the <strong>Medallion Architecture</strong> (Bronze -> Gold).
+        </p>
+
+        <div class="code-block">
+<span class="comment">-- Parsing nested JSON to create Gold Layer</span>
+<span class="keyword">CREATE OR REPLACE TABLE</span> gold_player_stats <span class="keyword">AS</span>
+<span class="keyword">WITH</span> Parsed_Data <span class="keyword">AS</span> (
+    <span class="keyword">SELECT</span> <span class="function">explode</span>(elements) <span class="keyword">as</span> p 
+    <span class="keyword">FROM</span> bronze_json_raw
+)
+<span class="keyword">SELECT</span> 
+    p.id <span class="keyword">as</span> player_id,
+    p.web_name <span class="keyword">as</span> player_name,
+    <span class="function">CAST</span>(p.now_cost <span class="keyword">AS FLOAT</span>) / 10.0 <span class="keyword">as</span> player_price,
+    <span class="function">CAST</span>(p.form <span class="keyword">AS FLOAT</span>) <span class="keyword">as</span> player_form,
+    p.status <span class="keyword">as</span> injury_status
+<span class="keyword">FROM</span> Parsed_Data
+<span class="keyword">WHERE</span> p.total_points > 0;
+        </div>
+
+        <h2>3. The Math: Linear Programming Optimization</h2>
+        <p>
+            This is where Data Science meets Operations Research. I used the <strong>Simplex method</strong> (via the Python PuLP library) to solve a constraint satisfaction problem. 
+        </p>
+        <p>
+            The model doesn't just pick "good players". It maximizes the total <code>player_form</code> of the team while following strict rules:
+        </p>
+        <ul style="margin-left: 20px; margin-bottom: 20px;">
+            <li><strong>Budget Constraint:</strong> Total cost ≤ £100M.</li>
+            <li><strong>Squad Size:</strong> Exactly 11 players.</li>
+            <li><strong>Formation Rules:</strong> 1 GK, 4 DEF, 4 MID, 2 FWD.</li>
+            <li><strong>Health Check:</strong> Only players with status 'Available'.</li>
+        </ul>
+
+        <div class="code-block">
+<span class="comment"># Python PuLP Optimization Logic</span>
+prob = pulp.LpProblem(<span class="string">"FPL_Dream_Team"</span>, pulp.LpMaximize)
+
+<span class="comment"># Objective: Maximize Total Form</span>
+prob += pulp.lpSum([df.loc[i, <span class="string">'player_form'</span>] * x[i] <span class="keyword">for</span> i <span class="keyword">in</span> player_ids])
+
+<span class="comment"># Constraint: Budget <= 100M</span>
+prob += pulp.lpSum([df.loc[i, <span class="string">'player_price'</span>] * x[i] <span class="keyword">for</span> i <span class="keyword">in</span> player_ids]) <= 100.0
+
+<span class="comment"># Solve</span>
+prob.solve()
+        </div>
+
+        <p>
+            I also implemented a "performance floor" constraint. To ensure the team is competitive, the total form of the selected 11 players must be strictly higher than the league average multiplied by 11.
+        </p>
+
+        <div class="code-block">
+<span class="comment"># Constraint D: Performance Floor</span>
+<span class="comment"># The team must be better than the average league performance</span>
+league_avg_form = df[<span class="string">'player_form'</span>].mean()
+min_required_form = league_avg_form * 11
+
+prob += pulp.lpSum([df.loc[i, <span class="string">'player_form'</span>] * x[i] <span class="keyword">for</span> i <span class="keyword">in</span> player_ids]) >= min_required_form
+        </div>
+
+        <h2>4. Visualization: Actionable Dashboard</h2>
+        <p>
+            The output isn't just a list of names. I used my <strong>Power BI & Dashboarding skills</strong> to build a native Databricks interface. The key visualization is the <strong>"Moneyball Scatter Plot"</strong>.
+        </p>
+        <p>
+            It plots <strong>Price (X)</strong> vs. <strong>Form (Y)</strong>. The algorithm targets players in the <em>Top-Left Quadrant</em> (Low Price, High Performance)—the hidden gems that allow us to afford expensive superstars like Haaland while keeping a balanced team.
+        </p>
+
+        <img src="scatter-fpl.png" alt="FPL Moneyball Scatter Plot - Finding Hidden Gems" class="content-image">
+
+        <div class="reflection-box">
+            <h3>Key Takeaways</h3>
+            <p style="margin-bottom: 0;">
+                This project was a crash course in modern cloud engineering. I learned that <strong>Data Engineering isn't just about code—it's about architecture and workarounds.</strong> When the initial plan (GitHub CSVs) wasn't enough, I pivoted to a harder solution (API + JSON) and solved the cloud connectivity issues. Combining this with Operations Research and Visualization resulted in a tool that actually beats human intuition.
+            </p>
+        </div>
+
+    </section>
+
+    <section class="more-projects">
+        <h3 style="text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem;">Explore Other Projects</h3>
+        
+        <div class="projects-grid">
+            <a href="project-bowling.html" class="project-tile">
+                <img src="bowlingheader.png" alt="Bowling Analytics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Bowling Analytics</h4>
+                    <span class="tile-tag">Power BI & DAX</span>
+                </div>
+            </a>
+
+            <a href="project-forest.html" class="project-tile">
+                <img src="bpheader.png" alt="Forest Logistics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Forest Logistics</h4>
+                    <span class="tile-tag">Operations Research</span>
+                </div>
+            </a>
+
+            <a href="project-loan.html" class="project-tile">
+                <img src="pdheader.png" alt="Loan Predictor" class="tile-image">
+                <div class="tile-content">
+                    <h4>Loan Eligibility Model</h4>
+                    <span class="tile-tag">Machine Learning</span>
+                </div>
+            </a>
+
+            <a href="project-timber.html" class="project-tile">
+                <img src="econometricsheader.png" alt="Timber Market" class="tile-image">
+                <div class="tile-content">
+                    <h4>Timber Market Dynamics</h4>
+                    <span class="tile-tag">Econometrics</span>
+                </div>
+            </a>
+
+            <a href="project-sports-db.html" class="project-tile">
+                <img src="dbheader.png" alt="Sports Database" class="tile-image">
+                <div class="tile-content">
+                    <h4>Sports DB System</h4>
+                    <span class="tile-tag">SQL & Database</span>
+                </div>
+            </a>
+
+            <a href="project-wildlife.html" class="project-tile">
+                <img src="sdheader.png" alt="Wildlife Simulation" class="tile-image">
+                <div class="tile-content">
+                    <h4>Wildlife Simulation</h4>
+                    <span class="tile-tag">System Dynamics</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+</body>
+</html>
