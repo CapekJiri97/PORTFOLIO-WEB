@@ -65,7 +65,7 @@
         .social-links a:hover { opacity: 1; color: #4ade80; }
 
         .header-right { flex: 1.5; display: flex; justify-content: flex-end; align-items: center; }
-        .skills-container { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 350px; }
+        .skills-container { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 700px; }
         .skill-tag { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.15); transition: background 0.3s; }
         .skill-tag:hover { background: rgba(255, 255, 255, 0.2); }
 
@@ -208,12 +208,14 @@
 
             <div class="header-right">
                 <div class="skills-container">
-                    <span class="skill-tag">Python</span>
-                    <span class="skill-tag">SQL</span>
-                    <span class="skill-tag">Power BI</span>
+                    <span class="skill-tag">Python & Pandas</span>
+                    <span class="skill-tag">SQL & Data Modeling</span>
+                    <span class="skill-tag">Power BI & DAX</span>
+                    <span class="skill-tag">Databricks</span>
+                    <span class="skill-tag">Streamlit & UI Design</span>
+                    <span class="skill-tag">Risk Analysis</span>
                     <span class="skill-tag">Econometrics</span>
                     <span class="skill-tag">System Dynamics</span>
-                    <span class="skill-tag">UX Design</span>
                 </div>
             </div>
         </header>
@@ -248,6 +250,15 @@
             isNew: true, // Flag pro označení
             bgColor: "#1F272D" // Tmavé pozadí pro FPL dashboard
         },
+        { 
+            title: "Sheep Farm Strategy Simulator", 
+            tags: ["Python", "Streamlit", "System Dynamics", "Monte Carlo"], 
+            desc: "A complex simulation tool combining System Dynamics and Financial Modeling. Features a stochastic Python engine, Monte Carlo risk analysis, and an interactive Streamlit BI dashboard for strategic farm planning.", 
+            img: "sheep-dashboard.png", 
+            link: "project-sheep.html",
+            isNew: true, 
+            bgColor: "#0e1118" 
+        },
         // Ostatní projekty...
         { title: "Forest Protection Logistics Optimization / TSPTW Model", tags: ["Python", "MS Excel", "OpenSolver", "Operations Research"], desc: "Bachelor's Thesis: Application of Operations Research to optimize inspection logistics using the TSPTW model. Constructed a mathematical model to minimize fieldwork time.", img: "bpheader.png", link: "project-forest.html", bgColor: "#263611" },
         
@@ -255,13 +266,7 @@
         
         { title: "Econometric Modeling of Timber Market Dynamics", tags: ["Gretl", "MS Excel", "Econometrics", "TSLS"], desc: "Development of a simultaneous timber market model using the TSLS method to capture interdependent nature of Larch and Pine harvesting. Simulation of price scenarios.", img: "econometricsheader.png", link: "project-timber.html", bgColor: "#263611" },
         
-        { title: "Loan Eligibility Predictor / Probability of Default model", tags: ["Python", "Scikit-learn", "ML", "Logistic Regression"], desc: "End-to-end development of a credit risk (PD) model with deployment to a web app. Logistic regression training and validation using standard risk metrics (ROC, K-S).", img: "pdheader.png", link: "project-loan.html", bgColor: "#000000" },
-        
-        { title: "Relational DB Design & Implementation for Sports Season Analytics", tags: ["SQL", "PostgreSQL", "DB Modeling", "Relational Algebra"], desc: "Complete relational database design from ER Diagram to physical implementation for a football league. Robust structure for tracking match statistics and business side.", img: "dbheader.png", link: "project-sports-db.html", bgColor: "#ffffff" },
-        
-        { title: "Wildlife Management & Economic Simulation (System Dynamics)", tags: ["Vensim", "System Dynamics", "Simulation Modeling"], desc: "Application of System Dynamics to simulate the management of a hunting association. Analyzing 'Limits to Growth' archetype in a real-world biological system.", img: "sdheader.png", link: "project-wildlife.html", bgColor: "#7AB37E" }, // Světle zelená pro Vensim
-        
-        { title: "Marketing Mix Analysis Prusa Research and Data Visualization", tags: ["Power BI", "Excel", "Market Research", "Data Visualisation"], desc: "Realization of a complete end-to-end data-marketing project. Interactive Power BI dashboard analyzing price sensitivity and purchasing behavior of Prusa customers.", img: "prusaheader.png", link: "project-prusa.html", bgColor: "#f5f5f5" }
+        { title: "Relational DB Design & Implementation for Sports Season Analytics", tags: ["SQL", "PostgreSQL", "DB Modeling", "Relational Algebra"], desc: "Complete relational database design from ER Diagram to physical implementation for a football league. Robust structure for tracking match statistics and business side.", img: "dbheader.png", link: "project-sports-db.html", bgColor: "#ffffff" }
     ];
 
     const container = document.getElementById('carousel');

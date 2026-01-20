@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheep Farm Strategy Simulator | Jiří Čapek</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* ZEMITÁ PALETA (Farmářská / Planning) */
+            --primary: #38655D;       
+            --primary-dark: #294D46;
+            --accent: #d4a373; /* Zlatavá/Senná barva pro akcent */
+            
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --code-bg: #1e1e1e;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.7; }
+
+        /* NAVIGACE */
+        nav {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 1rem 3rem;
+            display: flex; justify-content: space-between; align-items: center; color: white;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-brand { font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-back { color: white; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; opacity: 0.8; transition: 0.3s; }
+        .btn-back:hover { opacity: 1; transform: translateX(-5px); }
+
+        /* HERO SEKCE */
+        .project-hero {
+            background-color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-category {
+            color: var(--primary); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; display: inline-block;
+        }
+
+        h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; color: var(--text-main); }
+        
+        .hero-meta {
+            display: flex; justify-content: center; gap: 1.5rem; color: #64748b; font-size: 0.9rem; margin-bottom: 2rem; flex-wrap: wrap;
+        }
+        .meta-item i { color: var(--primary); margin-right: 5px; }
+
+        /* BUTTONS */
+        .btn-live { 
+            background: var(--primary); color: white; padding: 15px 35px; border-radius: 8px; 
+            text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; 
+            box-shadow: 0 10px 20px rgba(56, 101, 93, 0.2); transition: all 0.3s; width: fit-content; margin-top: 20px;
+        }
+        .btn-live:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(56, 101, 93, 0.3); }
+        
+        .loading-note { display: block; font-size: 0.8rem; color: #64748b; margin-top: 10px; font-style: italic; }
+
+        /* HLAVNÍ OBRÁZEK */
+        .main-image-wrapper {
+            max-width: 1100px; margin: -3rem auto 3rem auto; padding: 0 1rem; position: relative; z-index: 10;
+        }
+        .main-image { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); display: block; border: 1px solid white; }
+
+        /* OBSAH */
+        .content-section { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+
+        h2 { font-size: 1.8rem; color: var(--primary-dark); margin: 4rem 0 1.5rem 0; font-weight: 700; border-left: 5px solid var(--accent); padding-left: 15px; }
+        h3 { font-size: 1.3rem; margin: 2rem 0 1rem 0; color: var(--text-main); font-weight: 600; }
+        p { margin-bottom: 1.2rem; color: #334155; font-size: 1.05rem; text-align: justify; }
+        
+        .content-image { width: 100%; border-radius: 8px; margin: 2rem 0; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        /* TECH STACK */
+        .tech-box { background: white; border-top: 4px solid var(--primary); padding: 2rem; border-radius: 8px; margin: 2rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .tech-title { font-weight: 700; margin-bottom: 1rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+        .tech-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tech-tag { background: #f1f5f9; padding: 6px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; color: var(--primary-dark); border: 1px solid var(--border); }
+
+        /* LOGIC GRID (New for Logic Breakdown) */
+        .logic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 2rem; }
+        .logic-card { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .logic-header { font-weight: 700; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .logic-list { list-style: none; padding: 0; font-size: 0.9rem; color: #475569; }
+        .logic-list li { margin-bottom: 8px; padding-left: 15px; position: relative; }
+        .logic-list li::before { content: '›'; color: var(--accent); font-weight: bold; position: absolute; left: 0; }
+        .var-name { font-family: 'Consolas', monospace; color: #e67e22; background: #fff7ed; padding: 2px 4px; border-radius: 4px; font-size: 0.85rem; }
+        
+        /* PILLARS GRID */
+        .pillars-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 3rem; }
+        .pillar-card { background: var(--primary); color: white; padding: 1rem; border-radius: 8px; text-align: center; font-size: 0.9rem; }
+        .pillar-icon { font-size: 1.5rem; margin-bottom: 10px; color: var(--accent); }
+        @media (max-width: 768px) { .pillars-grid { grid-template-columns: 1fr 1fr; } }
+
+        /* REFLECTION */
+        .reflection-box { background: #ecfdf5; border: 1px solid #d1fae5; padding: 2rem; border-radius: 12px; margin-top: 4rem; position: relative; }
+        .reflection-box::before { content: '\f10d'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: -15px; left: 20px; background: var(--bg); padding: 0 10px; color: var(--primary); font-size: 1.5rem; }
+
+        /* MORE PROJECTS */
+        .more-projects { max-width: 1000px; margin: 4rem auto; padding: 4rem 2rem 0; border-top: 1px solid var(--border); }
+        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+        .project-tile { background: white; border: 1px solid var(--border); border-radius: 12px; text-decoration: none; color: var(--text-main); display: flex; flex-direction: column; overflow: hidden; transition: all 0.3s ease; height: 100%; }
+        .project-tile:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .tile-image { width: 100%; height: 140px; object-fit: cover; border-bottom: 1px solid var(--border); }
+        .tile-content { padding: 1.2rem; text-align: center; }
+        .tile-tag { font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600; background: #f1f5f9; padding: 4px 10px; border-radius: 50px; }
+
+        @media (max-width: 768px) { 
+            h1 { font-size: 2rem; } 
+            .projects-grid { grid-template-columns: 1fr; }
+            .main-image-wrapper { margin-top: -2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+        <div class="nav-brand">Jiří Čapek</div>
+    </nav>
+
+    <section class="project-hero">
+        <div class="container">
+            <span class="project-category">System Dynamics & Data Science</span>
+            <h1>Sheep Farm Strategy Simulator</h1>
+            
+            <div class="hero-meta">
+                <div class="meta-item"><i class="fas fa-code"></i> Python & NumPy</div>
+                <div class="meta-item"><i class="fas fa-chart-pie"></i> BI & Data Modeling</div>
+                <div class="meta-item"><i class="fas fa-project-diagram"></i> System Simulation</div>
+                <div class="meta-item"><i class="fas fa-random"></i> Monte Carlo</div>
+            </div>
+
+            <a href="https://sheep-farm-bi-systemdynamics-dvfvhpqwe7kxzkxi9wkbn4.streamlit.app" target="_blank" class="btn-live">
+                <i class="fas fa-play-circle"></i> Launch Simulation App
+            </a>
+            <span class="loading-note">(Note: App might take ~30s to wake up from sleep mode)</span>
+        </div>
+    </section>
+
+    <div class="main-image-wrapper">
+        <img src="sheep-dashboard.png" alt="Sheep Farm BI Dashboard" class="main-image">
+    </div>
+
+    <section class="content-section">
+        
+        <p>
+            <strong>The Challenge:</strong> Farming isn't just about feeding animals; it's a complex system of delayed feedbacks, biological constraints, and volatile market prices. This project translates real-world agricultural logic into a <strong>Business Intelligence & Simulation tool</strong>.
+        </p>
+        <p>
+            The core philosophy was to bridge the gap between <strong>Reality</strong> and <strong>Data Science</strong>. It combines <strong>System Modeling</strong> with <strong>Financial Planning</strong> to create a digital twin of the farm, allowing for risk-free testing of strategies before investing capital.
+        </p>
+
+        <div class="pillars-grid">
+            <div class="pillar-card">
+                <div class="pillar-icon"><i class="fas fa-project-diagram"></i></div>
+                <strong>System Modeling</strong><br>Reality to Math
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon"><i class="fas fa-code"></i></div>
+                <strong>Math Simulation</strong><br>Python Engine
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon"><i class="fas fa-chart-line"></i></div>
+                <strong>BI Dashboard</strong><br>Streamlit App
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon"><i class="fas fa-random"></i></div>
+                <strong>Monte Carlo</strong><br>Data Science
+            </div>
+        </div>
+
+        <div class="tech-box">
+            <div class="tech-title">Technology Stack</div>
+            <div class="tech-list">
+                <span class="tech-tag">Python (Pandas, NumPy)</span>
+                <span class="tech-tag">Streamlit (BI Dashboard)</span>
+                <span class="tech-tag">System Dynamics</span>
+                <span class="tech-tag">Monte Carlo Simulation</span>
+                <span class="tech-tag">Data Modeling</span>
+                <span class="tech-tag">Forecasting</span>
+            </div>
+        </div>
+
+        <h2>1. System Modeling: From Reality to CLD</h2>
+        <p>
+            The project began in the field. I conducted in-depth interviews with a local sheep farmer to understand the "Physics" of the business. We discussed what is relevant to the model and what is unnecessarily complex.
+        </p>
+        <p>
+            Together, we mapped out the <strong>Causal Loop Diagram (CLD)</strong> to capture the system's structure, identifying critical feedback loops (e.g., Pasture Degradation) and delays (e.g., Gestation) that traditional Excel planning misses.
+        </p>
+        <img src="sheep_cld.png" alt="Causal Loop Diagram of the Farm" class="content-image">
+
+        <h2>2. The Mathematical Engine (Python)</h2>
+        <p>
+            Based on the CLD, I built a robust <strong>Python simulation engine</strong> utilizing System Dynamics principles. 
+            Every variable in the model is stochastic with a normal distribution to simulate real-world variance. All data points and functions were fact-checked against academic sources and the farmer's experience.
+        </p>
+        
+        <h3>Under the Hood: Variable Logic</h3>
+        <div class="logic-grid">
+            <div class="logic-card">
+                <div class="logic-header"><i class="fas fa-layer-group"></i> Main State Variables (Stocks)</div>
+                <ul class="logic-list">
+                    <li><span class="var-name">self.cash</span>: <code>income - total_out</code>. Accumulates profit/loss over time.</li>
+                    <li><span class="var-name">self.hay_stock</span>: <code>harvest + buy - fed - sold</code>. Physical inventory tracking.</li>
+                    <li><span class="var-name">self.ewes</span>: <code>keep - cull - deaths</code>. Population dynamics of breeding females.</li>
+                    <li><span class="var-name">self.bcs</span>: Body Condition Score. Driven by feed availability vs. lactation demand.</li>
+                </ul>
+            </div>
+            <div class="logic-card">
+                <div class="logic-header"><i class="fas fa-brain"></i> Decision Logic</div>
+                <ul class="logic-list">
+                    <li><span class="var-name">wants_to_supplement</span>: Triggered if <code>perceived_bcs < 3.2</code>.</li>
+                    <li><span class="var-name">cull_count</span>: Removes sheep exceeding max age (Aging Chain).</li>
+                    <li><span class="var-name">pressure</span>: <code>demand_kg / available_grass</code>. Determines pasture degradation.</li>
+                    <li><span class="var-name">market_logic</span>: Tiered pricing (Local Premium limit vs Wholesale).</li>
+                </ul>
+            </div>
+            <div class="logic-card">
+                <div class="logic-header"><i class="fas fa-coins"></i> Economic Subsystem</div>
+                <ul class="logic-list">
+                    <li><span class="var-name">income</span>: Sum of Meat, Hay sales, and Subsidies.</li>
+                    <li><span class="var-name">total_out</span>: Feed costs + Variable costs + Labor + Shocks.</li>
+                    <li><span class="var-name">day_admin</span>: Diseconomy of scale: <code>base * (animals/50)^factor</code>.</li>
+                    <li><span class="var-name">labor_val</span>: Calculation of labor costs based on hourly wages.</li>
+                </ul>
+            </div>
+            <div class="logic-card">
+                <div class="logic-header"><i class="fas fa-cloud-sun-rain"></i> Environmental Feedback</div>
+                <ul class="logic-list">
+                    <li><span class="var-name">weather_regime</span>: Autocorrelated weather patterns (Dry/Wet trends).</li>
+                    <li><span class="var-name">pasture_health</span>: Ecological loop. Degrades if pressure > 0.95.</li>
+                    <li><span class="var-name">shocks</span>: Random probability events (Machinery breakdown, Disease).</li>
+                    <li><span class="var-name">seasonality</span>: Winter/Summer cycles affecting growth and costs.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>3. Streamlit BI Dashboard</h2>
+        <p>
+            The backend is powerful, but the frontend makes it usable. I developed a comprehensive <strong>Streamlit BI Dashboard</strong> that serves as a "Flight Simulator" for the farm. It goes beyond simple charts, offering a deep dive into the farm's operational and financial health.
+        </p>
+        <p>
+            Key features of the dashboard include:
+            <ul style="margin-left: 20px;">
+                <li><strong>Sticky KPI Header:</strong> Immediate feedback on Cash, Herd Size, Hay Stock, ROI, and Labor Hours.</li>
+                <li><strong>Financial Overview:</strong> A stacked Cashflow analysis to pinpoint liquidity crunches and a cumulative profit tracker.</li>
+                <li><strong>Herd Dynamics:</strong> An area chart visualizing the age structure and population growth over time.</li>
+                <li><strong>Feeding Efficiency:</strong> A breakdown of feed sources (Grazing vs. Hay vs. Market Purchase) to optimize costs.</li>
+                <li><strong>Biological Metrics:</strong> Tracking Body Condition Score (BCS) and Pasture Health to ensure sustainability.</li>
+            </ul>
+        </p>
+
+        <h2>4. Monte Carlo Laboratory</h2>
+        <p>
+            A single simulation isn't enough to manage risk. I implemented a <strong>Monte Carlo Laboratory</strong> that brings a true <strong>Data Science</strong> approach to the project.
+        </p>
+        <p>
+            This module runs the simulation thousands of times with randomized weather patterns and price volatilities. It generates <strong>probability distributions</strong> for outcomes like Bankruptcy Risk or Net Profit and includes <strong>Sensitivity Analysis</strong> to identify which variables (e.g., Fuel Price vs. Meat Price) have the highest correlation with success.
+        </p>
+        <img src="montecarlo-lab.png" alt="Monte Carlo Sensitivity Analysis" class="content-image">
+
+        <div class="reflection-box">
+            <h3>Project Reflection</h3>
+            <p style="margin-bottom: 0;">
+                This project is the culmination of my skills in <strong>System Modeling, Business Intelligence, Data Visulalisation</strong>
+                 and sneak peak of<strong> Data Science </strong>. It demonstrates that I can not only build complex mathematical models but also translate them into user-friendly tools that answer critical business questions. It bridges the gap between theoretical econometrics and practical financial planning.
+            </p>
+        </div>
+
+    </section>
+
+    <section class="more-projects">
+        <h3 style="text-align: center; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem;">Explore Other Projects</h3>
+        
+        <div class="projects-grid">
+             
+            <a href="project-fpl.html" class="project-tile">
+                <img src="fplheader.png" alt="FPL Optimization" class="tile-image">
+                <div class="tile-content">
+                    <h4>FPL Moneyball Optimization</h4>
+                    <span class="tile-tag">Databricks & Python</span>
+                </div>
+            </a>
+
+            <a href="project-timber.html" class="project-tile">
+                <img src="econometricsheader.png" alt="Timber Market" class="tile-image">
+                <div class="tile-content">
+                    <h4>Timber Market Dynamics</h4>
+                    <span class="tile-tag">Econometrics</span>
+                </div>
+            </a>
+
+            <a href="project-forest.html" class="project-tile">
+                <img src="bpheader.png" alt="Forest Logistics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Forest Logistics</h4>
+                    <span class="tile-tag">Operations Research</span>
+                </div>
+            </a>
+
+            <a href="project-sports-db.html" class="project-tile">
+                <img src="dbheader.png" alt="Sports Database" class="tile-image">
+                <div class="tile-content">
+                    <h4>Sports DB System</h4>
+                    <span class="tile-tag">SQL & Database</span>
+                </div>
+            </a>
+
+            <a href="project-bowling.html" class="project-tile">
+                <img src="bowlingheader.png" alt="Bowling Analytics" class="tile-image">
+                <div class="tile-content">
+                    <h4>Bowling Analytics</h4>
+                    <span class="tile-tag">Power BI & DAX</span>
+                </div>
+            </a>
+
+        </div>
+    </section>
+
+</body>
+</html>
