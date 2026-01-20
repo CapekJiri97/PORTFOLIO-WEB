@@ -199,40 +199,44 @@
             <h2 class="step-title"><i class="fas fa-sitemap"></i> 1. Conceptual & Logical Design</h2>
             <p>
                 The database manages a football season including players, teams, matches, goals, and cards. 
-                A key challenge was handling circular relationships (loops) to maintain data integrity.
+                The primary goal was to achieve <strong>3rd Normal Form (3NF)</strong> to minimize redundancy and ensure data consistency.
             </p>
             <ul style="margin: 1rem 0 1rem 2rem; color: #475569;">
-                <li><strong>Loop Handling:</strong> The cycle <em>Match -> Team -> Player -> Participation</em> was resolved using optional relationships to prevent deletion anomalies.</li>
-                <li><strong>Entities:</strong> Designed 14 tables including <em>Participation</em> (linking players to matches) and <em>Deals</em> (sponsors & teams).</li>
+                <li><strong>Handling Circular Dependencies:</strong> A naive design (Match -> Team -> Player) creates a loop where data can become inconsistent. I resolved this by enforcing strict integrity rules in the <em>Participation</em> association entity.</li>
+                <li><strong>Entity Modeling:</strong> Designed 14 normalized tables. Special attention was paid to the <em>Deals</em> table to track sponsorship contracts with validity periods.</li>
             </ul>
             <img src="erd2.png" alt="ER Diagram" class="project-image">
         </div>
 
         <div class="step-card">
-            <h2 class="step-title"><i class="fas fa-server"></i> 2. DDL Implementation</h2>
+            <h2 class="step-title"><i class="fas fa-server"></i> 2. Physical Implementation (DDL)</h2>
             <p>
-                The physical database was implemented in <strong>PostgreSQL</strong>. I used constraints to enforce rules, such as ensuring unique IDs and proper foreign key links.
+                Implemented in <strong>PostgreSQL</strong>. I went beyond simple table creation by using <strong>CHECK constraints</strong> and <strong>Indexes</strong> to ensure data quality and performance.
             </p>
             
             <div class="code-block">
-<span class="comment">-- Table: Match (Example of Physical Schema)</span><br>
+<span class="comment">-- Table: Match with Constraints</span><br>
 <span class="keyword">CREATE TABLE</span> match (<br>
 &nbsp;&nbsp;mid <span class="keyword">SERIAL NOT NULL PRIMARY KEY</span>,<br>
 &nbsp;&nbsp;fid <span class="keyword">INTEGER NOT NULL REFERENCES</span> field(fid),<br>
 &nbsp;&nbsp;rid <span class="keyword">INTEGER NOT NULL REFERENCES</span> referee(rid),<br>
-&nbsp;&nbsp;tid <span class="keyword">INTEGER NOT NULL REFERENCES</span> team(tid),<br>
-&nbsp;&nbsp;team_tid <span class="keyword">INTEGER NOT NULL REFERENCES</span> team(tid),<br>
+&nbsp;&nbsp;home_team_id <span class="keyword">INTEGER NOT NULL REFERENCES</span> team(tid),<br>
+&nbsp;&nbsp;away_team_id <span class="keyword">INTEGER NOT NULL REFERENCES</span> team(tid),<br>
 &nbsp;&nbsp;date <span class="keyword">DATE NOT NULL</span>,<br>
-&nbsp;&nbsp;round <span class="keyword">INTEGER NOT NULL</span>,<br>
-&nbsp;&nbsp;motw <span class="keyword">BOOLEAN</span> <span class="comment">-- Match of the Week flag</span><br>
-);
+&nbsp;&nbsp;home_score <span class="keyword">INTEGER DEFAULT</span> 0 <span class="keyword">CHECK</span> (home_score >= 0),<br>
+&nbsp;&nbsp;away_score <span class="keyword">INTEGER DEFAULT</span> 0 <span class="keyword">CHECK</span> (away_score >= 0),<br>
+&nbsp;&nbsp;<span class="keyword">CONSTRAINT</span> check_teams <span class="keyword">CHECK</span> (home_team_id != away_team_id)<br>
+);<br>
+<br>
+<span class="comment">-- Index for faster date filtering</span><br>
+<span class="keyword">CREATE INDEX</span> idx_match_date <span class="keyword">ON</span> match(date);
             </div>
         </div>
 
         <div class="step-card">
             <h2 class="step-title"><i class="fas fa-code"></i> 3. Advanced Querying</h2>
             <p>
-                The core value lies in data extraction. I utilized complex SQL features like <strong>Set Operations (INTERSECT)</strong> and <strong>Having clauses</strong> to answer business questions.
+                The core value lies in data extraction. I utilized complex SQL features like <strong>Set Operations (INTERSECT)</strong>, <strong>Subqueries</strong>, and <strong>Having clauses</strong> to answer specific business questions.
             </p>
             
             <div class="code-block">
@@ -266,7 +270,27 @@
         </div>
 
         <div class="step-card">
-            <h2 class="step-title"><i class="fas fa-square-root-variable"></i> 4. Relational Algebra & Verification</h2>
+            <h2 class="step-title"><i class="fas fa-layer-group"></i> 4. Views & Reporting Layer</h2>
+            <p>
+                To simplify access for analysts, I created <strong>SQL Views</strong>. These abstract the complexity of joining 5+ tables (Player, Team, Match, Goal, Card) into a single "virtual table" ready for BI tools.
+            </p>
+            <div class="code-block">
+<span class="comment">-- View: Player Performance Summary</span><br>
+<span class="keyword">CREATE VIEW</span> v_player_stats <span class="keyword">AS</span><br>
+<span class="keyword">SELECT</span> <br>
+&nbsp;&nbsp;p.name, p.surname, t.name <span class="keyword">AS</span> team,<br>
+&nbsp;&nbsp;<span class="function">COUNT</span>(part.mid) <span class="keyword">AS</span> matches_played,<br>
+&nbsp;&nbsp;<span class="function">COUNT</span>(g.gid) <span class="keyword">AS</span> goals_scored<br>
+<span class="keyword">FROM</span> player p<br>
+<span class="keyword">JOIN</span> participation part <span class="keyword">USING</span>(pid)<br>
+<span class="keyword">LEFT JOIN</span> goal g <span class="keyword">USING</span>(pid)<br>
+<span class="keyword">JOIN</span> team t <span class="keyword">USING</span>(tid)<br>
+<span class="keyword">GROUP BY</span> p.pid, t.tid;
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2 class="step-title"><i class="fas fa-square-root-variable"></i> 5. Relational Algebra & Verification</h2>
             <p>
                 Before implementation, queries were verified using Relational Algebra logic (e.g., verifying "Players without cards" using Set Difference).
                 <br><code>player \ {player * card}</code>
